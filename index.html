@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111113">
+<meta name="description" content="Scooter RS e-Drive Dashboard">
+<title>Scooter RS e-Drive</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0b0d;--panel:#17171b;--panel2:#202025;--red:#ff3038;--text:#f5f5f7;--muted:#9b9ba5;--line:#303037}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#241014 0,#0b0b0d 45%);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+header{padding:calc(18px + env(safe-area-inset-top)) 18px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff10;position:sticky;top:0;background:#0b0b0dee;backdrop-filter:blur(14px);z-index:5}
+.brand{font-weight:900;letter-spacing:1.4px;font-size:17px}.brand span{color:var(--red)}.sub{color:var(--muted);font-size:11px;letter-spacing:2px;margin-top:3px}.pill{border:1px solid #573037;color:#ff7c81;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}
+main{max-width:620px;margin:auto;padding:18px 15px 105px}.page{display:none}.page.active{display:block}.eyebrow{color:var(--red);font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase}.title{font-size:26px;font-weight:900;margin:7px 0 17px;letter-spacing:-.5px}
+.card{background:linear-gradient(145deg,#1d1d22,#131316);border:1px solid var(--line);border-radius:22px;padding:17px;margin-bottom:14px;box-shadow:0 12px 32px #0003}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.muted{color:var(--muted)}.small{font-size:12px}.red{color:var(--red)}
+.gauge{width:min(76vw,310px);height:min(76vw,310px);margin:12px auto 16px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 220deg,var(--red) 0deg,#ff3038 180deg,#35353b 180deg,#35353b 280deg,transparent 280deg);position:relative}
+.gauge:before{content:"";position:absolute;inset:10px;border-radius:50%;background:radial-gradient(circle at 50% 30%,#29292e,#101012 72%);border:1px solid #ffffff0c}
+.gauge-inner{position:relative;text-align:center}.speed{font-size:78px;font-weight:900;line-height:1;letter-spacing:-4px}.unit{font-size:13px;letter-spacing:3px;color:var(--muted);margin-top:6px}.statusline{display:flex;justify-content:center;gap:8px;align-items:center;color:#a9a9b2;font-size:12px}.dot{width:7px;height:7px;background:#f7b731;border-radius:50%;display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#ffffff06;border:1px solid #ffffff0b;border-radius:15px;padding:14px}.statlabel{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}.statvalue{font-size:24px;font-weight:850;margin-top:7px}.statvalue small{font-size:12px;color:var(--muted);font-weight:500}
+.btn{border:0;border-radius:13px;background:var(--red);color:white;font-size:14px;font-weight:850;padding:13px 15px;cursor:pointer}.btn.secondary{background:#2a2a31;border:1px solid #414149}.btn.ghost{background:transparent;border:1px solid #484850;color:var(--text)}.btn.full{width:100%}.btn:active{transform:scale(.98)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sectionhead{font-size:14px;font-weight:850;margin:4px 0 12px}.nav{position:fixed;z-index:10;bottom:0;left:0;right:0;padding:9px 7px calc(9px + env(safe-area-inset-bottom));background:#101013f2;border-top:1px solid #ffffff12;display:grid;grid-template-columns:repeat(5,1fr);backdrop-filter:blur(18px)}.nav button{background:none;border:0;color:#8f8f99;font-size:10px;font-weight:750;padding:7px 1px;display:flex;flex-direction:column;align-items:center;gap:5px}.nav button b{font-size:19px;font-weight:500}.nav button.active{color:#ff5057}
+label{font-size:12px;color:#bdbdc5;display:block;margin:14px 0 8px}input[type=range]{width:100%;accent-color:var(--red)}select{width:100%;padding:12px;background:#242429;color:white;border:1px solid #44444b;border-radius:12px} .log{padding:13px 0;border-bottom:1px solid var(--line)}.log:last-child{border-bottom:0}.notice{border:1px solid #5c3838;background:#241517;color:#ffc4c7;border-radius:13px;padding:12px;font-size:12px;line-height:1.5}.empty{text-align:center;color:var(--muted);padding:20px 8px;font-size:13px}.footer{text-align:center;color:#686872;font-size:10px;margin-top:22px}
+</style>
+</head>
+<body>
+<header><div><div class="brand">SCOOTER <span>RS</span> e-DRIVE</div><div class="sub">PERSONAL MOBILITY SYSTEM</div></div><div class="pill">DEMO MODUS</div></header>
+<main>
+<section class="page active" id="cockpit">
+<div class="eyebrow">Fahrzeugübersicht</div><div class="title">Dein Cockpit.</div>
+<div class="card">
+<div class="row"><span class="small muted">LIVE-GESCHWINDIGKEIT</span><span class="pill">SIMULATION</span></div>
+<div class="gauge"><div class="gauge-inner"><div class="speed" id="speed">0</div><div class="unit">KM/H</div></div></div>
+<div class="statusline"><span class="dot"></span><span id="rideStatus">Bereit zur Demo-Fahrt</span></div>
+<div style="margin-top:17px" class="grid2"><button class="btn full" id="demoBtn" onclick="toggleDemo()">▶ Demo starten</button><button class="btn secondary full" onclick="resetDemo()">↺ Zurücksetzen</button></div>
+</div>
+<div class="stats">
+<div class="stat"><div class="statlabel">Batterie</div><div class="statvalue">-- <small>%</small></div><div class="small muted">Keine Roller-Verbindung</div></div>
+<div class="stat"><div class="statlabel">Reichweite</div><div class="statvalue">-- <small>km</small></div><div class="small muted">Keine Daten verfügbar</div></div>
+<div class="stat"><div class="statlabel">Fahrtzeit</div><div class="statvalue" id="time">00:00</div><div class="small muted">Demo-Sitzung</div></div>
+<div class="stat"><div class="statlabel">Distanz</div><div class="statvalue" id="dist">0.00 <small>km</small></div><div class="small muted">Geschätzt in der Demo</div></div>
+</div>
+<div class="notice" style="margin-top:14px">Diese Version ist eine Web-Demo. Sie liest noch keine echten Daten vom Xiaomi Scooter 5 aus und sendet keine Steuerbefehle an den Roller.</div>
+</section>
+<section class="page" id="rides">
+<div class="eyebrow">Deine Daten</div><div class="title">Fahrten.</div>
+<div class="card"><div class="row"><div><div class="sectionhead">Fahrtaufzeichnung</div><div class="small muted">GPS vom iPhone, nur bei HTTPS und erteilter Freigabe</div></div><span class="pill" id="gpsBadge">BEREIT</span></div><div class="stats" style="margin:14px 0"><div class="stat"><div class="statlabel">GPS-Distanz</div><div class="statvalue" id="gpsDist">0.00 <small>km</small></div></div><div class="stat"><div class="statlabel">GPS-Zeit</div><div class="statvalue" id="gpsTime">00:00</div></div></div><div class="grid2"><button class="btn full" onclick="startGps()">● Start</button><button class="btn secondary full" onclick="stopGps()">■ Stopp & speichern</button></div><p class="small muted">Die Aufzeichnung läuft auf deinem iPhone. Standortdaten bleiben in diesem Browser gespeichert, solange du sie nicht löschst.</p></div>
+<div class="card"><div class="row"><div class="sectionhead">Gespeicherte Fahrten</div><button class="btn ghost" onclick="exportCsv()">CSV exportieren</button></div><div id="logs"><div class="empty">Noch keine gespeicherten Fahrten.</div></div><button class="btn ghost full" onclick="clearLogs()">Fahrten löschen</button></div>
+</section>
+<section class="page" id="diagnose">
+<div class="eyebrow">Systemstatus</div><div class="title">Diagnose.</div>
+<div class="card"><div class="sectionhead">App-Prüfung</div><div id="checks"></div><button class="btn full" style="margin-top:14px" onclick="runChecks()">System erneut prüfen</button></div>
+<div class="card"><div class="sectionhead">Verbindung</div><div class="row"><span>iPhone-Bluetooth</span><span class="pill">NICHT VERBUNDEN</span></div><div class="row" style="margin-top:13px"><span>Roller-Telemetrie</span><span class="pill">NICHT VERFÜGBAR</span></div><div class="row" style="margin-top:13px"><span>GPS-Berechtigung</span><span class="pill" id="gpsPermission">UNGEPRÜFT</span></div><p class="small muted">Eine echte Roller-Verbindung benötigt eine native iOS-Bluetooth-Implementierung und ein verifiziertes Kommunikationsprotokoll.</p></div>
+</section>
+<section class="page" id="tuning">
+<div class="eyebrow">Personalisierung</div><div class="title">Profile.</div>
+<div class="card"><div class="sectionhead">Fahrprofil auswählen</div><select id="mode" onchange="saveProfile()"><option value="comfort">Comfort · ausgewogen</option><option value="sport">Sport · dynamisch</option><option value="eco">Eco · sparsam</option></select>
+<label for="response">Anzeige-Reaktion <span id="responseVal" class="red">50%</span></label><input id="response" type="range" min="0" max="100" value="50" oninput="responseVal.textContent=this.value+'%';saveProfile()">
+<label for="brightness">Cockpit-Helligkeit <span id="brightnessVal" class="red">80%</span></label><input id="brightness" type="range" min="20" max="100" value="80" oninput="brightnessVal.textContent=this.value+'%';saveProfile()">
+<button class="btn full" style="margin-top:16px" onclick="saveProfile(true)">Profil speichern</button></div>
+<div class="notice">Diese Profile verändern nur die Darstellung in der Web-App. Sie verändern nicht die Leistung, Geschwindigkeit oder Firmware des Rollers.</div>
+</section>
+<section class="page" id="setup">
+<div class="eyebrow">Einstellungen</div><div class="title">Setup.</div>
+<div class="card"><div class="sectionhead">Fahrzeug</div><div class="row"><span>Modell</span><strong>Xiaomi Scooter 5</strong></div><div class="row" style="margin-top:13px"><span>App-Version</span><strong>0.4.0</strong></div><div class="row" style="margin-top:13px"><span>Speicher</span><strong>Lokaler Browser</strong></div></div>
+<div class="card"><div class="sectionhead">Berechtigungen</div><div class="row"><span>Standort für GPS-Fahrten</span><span class="pill">BEI BEDARF</span></div><p class="small muted">Safari benötigt eine sichere HTTPS-Seite und deine Erlaubnis für den Standort.</p><button class="btn secondary full" onclick="checkGps()">GPS-Berechtigung prüfen</button></div>
+<div class="card"><div class="sectionhead">Datenverwaltung</div><button class="btn ghost full" onclick="clearProfile()">Profileinstellungen zurücksetzen</button><p class="small muted">Fahrten und Profile werden lokal in diesem Browser gespeichert.</p></div>
+</section>
+<div class="footer">SCOOTER RS e-DRIVE · INOFFIZIELLES COMMUNITY-PROJEKT</div>
+</main>
+<nav class="nav">
+<button class="active" data-page="cockpit" onclick="go('cockpit',this)"><b>◉</b>Cockpit</button>
+<button data-page="rides" onclick="go('rides',this)"><b>↗</b>Fahrten</button>
+<button data-page="diagnose" onclick="go('diagnose',this)"><b>⌁</b>Diagnose</button>
+<button data-page="tuning" onclick="go('tuning',this)"><b>⚙</b>Profile</button>
+<button data-page="setup" onclick="go('setup',this)"><b>☷</b>Setup</button>
+</nav>
+<script>
+const $=id=>document.getElementById(id);
+let demoOn=false,demoStart=0,demoElapsed=0,demoTimer=null,demoSeconds=0,gpsWatch=null,gpsStart=null,gpsLast=null,gpsMeters=0,gpsSeconds=0,gpsTimer=null;
+function go(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='diagnose')runChecks();if(id==='rides')renderLogs()}
+function toggleDemo(){if(demoOn){demoOn=false;clearInterval(demoTimer);$('demoBtn').textContent='▶ Demo starten';$('rideStatus').textContent='Demo pausiert';return}demoOn=true;demoStart=Date.now()-demoElapsed*1000;$('demoBtn').textContent='Ⅱ Demo pausieren';$('rideStatus').textContent='Demo läuft · simulierte Werte';demoTimer=setInterval(()=>{demoSeconds=Math.floor((Date.now()-demoStart)/1000);demoElapsed=demoSeconds;const s=Math.min(32,Math.abs(Math.sin(demoSeconds/8)*25+Math.sin(demoSeconds/3)*4));$('speed').textContent=Math.round(s);$('time').textContent=fmt(demoSeconds);$('dist').innerHTML=(demoSeconds*s/3600).toFixed(2)+' <small>km</small>'},500)}
+function resetDemo(){demoOn=false;clearInterval(demoTimer);demoElapsed=0;demoSeconds=0;$('speed').textContent='0';$('time').textContent='00:00';$('dist').innerHTML='0.00 <small>km</small>';$('demoBtn').textContent='▶ Demo starten';$('rideStatus').textContent='Bereit zur Demo-Fahrt'}
+function fmt(sec){return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
+function readLogs(){try{return JSON.parse(localStorage.getItem('scooterRS.logs')||'[]')}catch(e){return []}}
+function writeLogs(a){try{localStorage.setItem('scooterRS.logs',JSON.stringify(a))}catch(e){alert('Speichern nicht möglich. Prüfe den Browser-Speicher.')}}
+function startGps(){if(!navigator.geolocation){alert('GPS ist in diesem Browser nicht verfügbar. Öffne die App über HTTPS in Safari.');return}if(!window.isSecureContext){alert('GPS benötigt eine sichere HTTPS-Adresse.');return}if(gpsWatch!==null)return;gpsMeters=0;gpsSeconds=0;gpsStart=Date.now();gpsLast=null;$('gpsBadge').textContent='LÄUFT';gpsTimer=setInterval(()=>{$('gpsTime').textContent=fmt(++gpsSeconds)},1000);gpsWatch=navigator.geolocation.watchPosition(pos=>{const p={lat:pos.coords.latitude,lon:pos.coords.longitude};if(gpsLast){const d=hav(gpsLast,p);if(d<100)gpsMeters+=d}$('gpsDist').innerHTML=(gpsMeters/1000).toFixed(2)+' <small>km</small>';gpsLast=p;$('gpsPermission').textContent='ERLAUBT'},err=>{alert('GPS-Fehler: '+err.message);stopGps()}, {enableHighAccuracy:true,maximumAge:2000,timeout:15000})}
+function stopGps(){if(gpsWatch!==null)navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;clearInterval(gpsTimer);$('gpsBadge').textContent='BEREIT';if(gpsStart&&gpsSeconds>0){const logs=readLogs();logs.unshift({date:new Date(gpsStart).toLocaleString('de-DE'),seconds:gpsSeconds,km:Number((gpsMeters/1000).toFixed(3))});writeLogs(logs);renderLogs()}gpsStart=null}
+function hav(a,b){const r=Math.PI/180,dLat=(b.lat-a.lat)*r,dLon=(b.lon-a.lon)*r,x=Math.sin(dLat/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLon/2)**2;return 6371000*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
+function renderLogs(){const logs=readLogs();$('logs').innerHTML=logs.length?logs.map(x=>'<div class="log"><div class="row"><strong>'+esc(x.date)+'</strong><strong>'+Number(x.km).toFixed(2)+' km</strong></div><div class="small muted" style="margin-top:5px">Fahrtdauer: '+fmt(Number(x.seconds)||0)+'</div></div>').join(''):'<div class="empty">Noch keine gespeicherten Fahrten.</div>'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function exportCsv(){const logs=readLogs();if(!logs.length){alert('Noch keine Fahrten vorhanden.');return}const csv='Datum,Dauer Sekunden,Distanz km\n'+logs.map(x=>'"'+String(x.date).replace(/"/g,'""')+'",'+x.seconds+','+x.km).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='scooter-rs-fahrten.csv';a.click();URL.revokeObjectURL(a.href)}
+function clearLogs(){if(confirm('Alle gespeicherten Fahrten löschen?')){localStorage.removeItem('scooterRS.logs');renderLogs()}}
+function saveProfile(notify=false){const p={mode:$('mode').value,response:$('response').value,brightness:$('brightness').value};try{localStorage.setItem('scooterRS.profile',JSON.stringify(p))}catch(e){}$('responseVal').textContent=p.response+'%';$('brightnessVal').textContent=p.brightness+'%';if(notify)alert('Profil lokal gespeichert. Es werden keine Roller-Einstellungen verändert.')}
+function loadProfile(){try{const p=JSON.parse(localStorage.getItem('scooterRS.profile')||'null');if(p){$('mode').value=p.mode||'comfort';$('response').value=p.response||50;$('brightness').value=p.brightness||80}}catch(e){}$('responseVal').textContent=$('response').value+'%';$('brightnessVal').textContent=$('brightness').value+'%'}
+function clearProfile(){if(confirm('Profil zurücksetzen?')){localStorage.removeItem('scooterRS.profile');$('mode').value='comfort';$('response').value=50;$('brightness').value=80;loadProfile()}}
+function checkGps(){if(!navigator.geolocation){alert('Geolocation wird nicht unterstützt.');return}if(!window.isSecureContext){alert('Die Seite ist nicht sicher (HTTPS). GPS benötigt HTTPS.');return}navigator.geolocation.getCurrentPosition(()=>{$('gpsPermission').textContent='ERLAUBT';alert('GPS-Berechtigung ist aktiv.')},e=>{alert('GPS nicht verfügbar: '+e.message)},{timeout:10000})}
+function runChecks(){const rows=[['HTTPS-Verbindung',window.isSecureContext?'OK':'HTTPS nötig'],['GPS im Browser',navigator.geolocation?'Unterstützt':'Nicht verfügbar'],['Lokaler Speicher',(()=>{try{localStorage.setItem('_rs_test','1');localStorage.removeItem('_rs_test');return 'OK'}catch(e){return 'Nicht verfügbar'}})()],['Roller-Bluetooth','Nicht implementiert']];$('checks').innerHTML=rows.map(r=>'<div class="row" style="padding:12px 0;border-bottom:1px solid var(--line)"><span>'+esc(r[0])+'</span><span class="small '+(r[1]==='OK'?'red':'muted')+'">'+esc(r[1])+'</span></div>').join('')}
+loadProfile();renderLogs();runChecks();
+</script>
+</body>
+</html>
