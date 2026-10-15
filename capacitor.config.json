@@ -1,0 +1,9 @@
+
+{
+  "appId": "de.scooterrs.app",
+  "appName": "Scooter RS",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "automatic"
+  }
+}
