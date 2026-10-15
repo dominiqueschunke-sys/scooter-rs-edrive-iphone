@@ -2,227 +2,312 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10151f">
-  <title>SCOOTER RS e-DRIVE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101010">
+<title>SCOOTER RS e-DRIVE</title>
 
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #10151f;
-      --panel: #1a2230;
-      --border: #344155;
-      --text: #f4f7fb;
-      --muted: #a9b5c8;
-      --accent: #59e0b0;
-      --danger: #ff7373;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 20px 14px 40px;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    main {
-      max-width: 700px;
-      margin: auto;
-    }
-
-    h1 {
-      font-size: 25px;
-      margin-bottom: 6px;
-    }
-
-    h2 {
-      font-size: 18px;
-      margin-top: 0;
-    }
-
-    p {
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      margin: 16px 0;
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-weight: 600;
-      margin: 12px 0;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #7b8798;
-      flex-shrink: 0;
-    }
-
-    .dot.online { background: var(--accent); }
-    .dot.error { background: var(--danger); }
-
-    button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      background: #283548;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button.primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #071b16;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .value {
-      font-size: 17px;
-      font-weight: 600;
-      overflow-wrap: anywhere;
-    }
-
-    #log {
-      min-height: 100px;
-      max-height: 350px;
-      overflow-y: auto;
-      padding: 12px;
-      border-radius: 10px;
-      background: #0a0e15;
-      color: #c6f7e4;
-      font: 12px/1.6 ui-monospace, SFMono-Regular, monospace;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .small {
-      font-size: 12px;
-      color: var(--muted);
-    }
-  </style>
+<style>
+:root{
+  --bg:#101010;--panel:#1b1b1b;--panel2:#242424;
+  --red:#f12b35;--text:#f5f5f5;--muted:#aaa;
+  --green:#46d889;--yellow:#ffc857;--border:#363636;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+header{
+  padding:22px 18px 16px;background:#171717;
+  border-bottom:1px solid var(--border);
+}
+.brand{font-size:12px;color:var(--red);letter-spacing:3px;font-weight:800}
+h1{font-size:23px;margin:7px 0}
+.subtitle{font-size:12px;color:var(--muted)}
+main{padding:14px;max-width:760px;margin:auto;padding-bottom:100px}
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  display:flex;overflow-x:auto;background:#171717;
+  border-top:1px solid var(--border);padding:7px 3px env(safe-area-inset-bottom);
+}
+nav button{
+  flex:1;min-width:65px;border:0;background:none;color:#aaa;
+  padding:9px 5px;font-size:11px;
+}
+nav button.active{color:var(--red)}
+nav span{display:block;font-size:19px;margin-bottom:4px}
+.page{display:none}
+.page.active{display:block}
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:15px;padding:16px;margin-bottom:13px;
+}
+h2{font-size:16px;margin:0 0 13px}
+h3{font-size:13px;margin:0 0 9px}
+p{font-size:13px;line-height:1.5;color:#ccc}
+.small{font-size:11px;color:var(--muted);line-height:1.5}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{background:var(--panel2);border-radius:12px;padding:14px}
+.stat label{display:block;color:var(--muted);font-size:11px}
+.stat strong{display:block;font-size:24px;margin-top:7px}
+.unit{font-size:11px;color:var(--muted)}
+button.action{
+  border:0;border-radius:10px;padding:12px 14px;
+  font-weight:700;font-size:13px;background:var(--red);
+  color:white;cursor:pointer;
+}
+button.secondary{background:#333;color:white;border:1px solid #484848}
+button:disabled{opacity:.45}
+.full{width:100%;margin-top:8px}
+.badge{
+  font-size:11px;padding:5px 8px;border-radius:20px;
+  background:#333;color:#ddd;white-space:nowrap;
+}
+.badge.good{color:var(--green);background:#123524}
+.badge.warn{color:var(--yellow);background:#3c3013}
+.badge.bad{color:#ff7a7a;background:#421c1c}
+.item{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;padding:11px 0;border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+.item:last-child{border-bottom:0}
+.item span:first-child{color:#ccc}
+input,select{
+  width:100%;background:#111;color:white;border:1px solid #444;
+  border-radius:9px;padding:11px;font-size:14px;margin:5px 0 12px;
+}
+input[type=range]{padding:0;accent-color:var(--red)}
+input[type=checkbox]{width:auto;margin:0;accent-color:var(--red)}
+label.field{font-size:12px;color:#bbb}
+.speedbox{text-align:center;padding:18px 0}
+.speed{font-size:74px;font-weight:800;letter-spacing:-4px}
+.speed small{font-size:16px;color:var(--muted);letter-spacing:0}
+.circle{
+  width:190px;height:190px;border:7px solid #333;
+  border-top-color:var(--red);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:5px auto 15px;
+}
+.log{
+  background:#101010;border-radius:8px;padding:10px;
+  font-family:ui-monospace,monospace;font-size:11px;
+  white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto;
+}
+.notice{
+  padding:11px;border-radius:9px;background:#292016;
+  color:#ffd98c;font-size:12px;line-height:1.5;margin-top:10px;
+}
+hr{border:0;border-top:1px solid var(--border);margin:14px 0}
+</style>
 </head>
 
 <body>
-<main>
+<header>
+  <div class="brand">RS PERFORMANCE SYSTEMS</div>
   <h1>SCOOTER RS e-DRIVE</h1>
-  <p>Bluetooth- und GPS-Diagnose</p>
+  <div class="subtitle">Xiaomi Scooter 5 · iPhone Edition</div>
+</header>
 
-  <section class="panel">
-    <h2>Bluetooth</h2>
+<main>
 
-    <div class="status">
-      <span id="btDot" class="dot"></span>
-      <span id="btStatus">Nicht verbunden</span>
+<section class="page active" id="cockpit">
+  <div class="card">
+    <div class="row">
+      <h2>Fahrzeug-Cockpit</h2>
+      <span id="mainStatus" class="badge warn">Nicht verbunden</span>
     </div>
+    <div class="speedbox">
+      <div class="circle">
+        <div>
+          <div class="speed" id="speed">0<small> km/h</small></div>
+          <div class="small">LIVE-GESCHWINDIGKEIT</div>
+        </div>
+      </div>
+    </div>
+    <div class="statgrid">
+      <div class="stat"><label>Fahrstrecke GPS</label><strong id="distance">0.00</strong><span class="unit">km</span></div>
+      <div class="stat"><label>Fahrzeit</label><strong id="duration">00:00</strong><span class="unit">Minuten:Sekunden</span></div>
+      <div class="stat"><label>GPS-Status</label><strong id="gpsStatus" style="font-size:17px">Inaktiv</strong></div>
+      <div class="stat"><label>Bluetooth</label><strong id="btStatus" style="font-size:17px">Getrennt</strong></div>
+    </div>
+    <button class="action full" onclick="connectScooter()">Bluetooth verbinden</button>
+    <button class="action secondary full" onclick="disconnectScooter()">Verbindung trennen</button>
+    <p class="small">Geschwindigkeit und Strecke werden über GPS ermittelt. Echte Fahrzeugtelemetrie wird nur angezeigt, wenn ein kompatibler Dienst sie bereitstellt.</p>
+  </div>
 
-    <p>Gerät: <span id="deviceName" class="value">Kein Gerät</span></p>
+  <div class="card">
+    <h2>Fahrtsteuerung</h2>
+    <div class="row">
+      <button class="action" onclick="startRide()">Fahrt starten</button>
+      <button class="action secondary" onclick="stopRide()">Fahrt beenden</button>
+    </div>
+    <button class="action secondary full" onclick="resetRide()">Fahrtdaten zurücksetzen</button>
+  </div>
+</section>
 
-    <button class="primary" id="connectBtn">
-      Scooter verbinden
-    </button>
+<section class="page" id="rides">
+  <div class="card">
+    <h2>Fahrten & GPS</h2>
+    <div class="item"><span>GPS-Berechtigung</span><span id="gpsPermission" class="badge">Ungeprüft</span></div>
+    <div class="item"><span>Letzte GPS-Position</span><span id="gpsPosition">Keine Daten</span></div>
+    <div class="item"><span>GPS-Genauigkeit</span><span id="gpsAccuracy">Keine Daten</span></div>
+    <button class="action full" onclick="enableGPS()">GPS aktivieren</button>
+    <button class="action secondary full" onclick="exportCSV()">Fahrtdaten als CSV exportieren</button>
+    <p class="small">GPS benötigt die Freigabe deines Browsers und gegebenenfalls eine sichere HTTPS-Verbindung.</p>
+  </div>
+  <div class="card">
+    <h2>Letzte Fahrt</h2>
+    <div class="item"><span>Strecke</span><strong id="rideDistance">0.00 km</strong></div>
+    <div class="item"><span>Fahrzeit</span><strong id="rideDuration">00:00</strong></div>
+    <div class="item"><span>Höchstgeschwindigkeit GPS</span><strong id="maxSpeed">0 km/h</strong></div>
+  </div>
+</section>
 
-    <button id="inspectBtn" disabled>
-      GATT-Dienste anzeigen
-    </button>
-
-    <button id="readBtn" disabled>
-      Bluetooth-Daten auslesen (0004 / 0005)
-    </button>
-
-    <button id="disconnectBtn" disabled>
-      Verbindung trennen
-    </button>
-
-    <p class="small">
-      Es werden keine Schreibbefehle an den Scooter gesendet.
-    </p>
-  </section>
-
-  <section class="panel">
-    <h2>GPS-Diagnose</h2>
-    <p>Position: <span id="gpsPosition" class="value">Noch nicht abgefragt</span></p>
-    <p>Genauigkeit: <span id="gpsAccuracy">-</span></p>
-    <button id="gpsBtn">GPS-Position abfragen</button>
-  </section>
-
-  <section class="panel">
+<section class="page" id="diagnose">
+  <div class="card">
+    <h2>Systemdiagnose</h2>
+    <div class="item"><span>Browser</span><span id="browserCheck" class="badge">Prüfung ausstehend</span></div>
+    <div class="item"><span>Bluetooth API</span><span id="bluetoothCheck" class="badge">Prüfung ausstehend</span></div>
+    <div class="item"><span>Bluetooth-Verbindung</span><span id="connectionCheck" class="badge">Nicht verbunden</span></div>
+    <div class="item"><span>GPS</span><span id="gpsCheck" class="badge">Nicht geprüft</span></div>
+    <div class="item"><span>GATT-Dienste</span><span id="serviceCheck" class="badge">Nicht geprüft</span></div>
+    <div class="item"><span>Auslesbare Merkmale</span><span id="characteristicCheck" class="badge">Nicht geprüft</span></div>
+    <button class="action full" onclick="runChecks()">Diagnose aktualisieren</button>
+    <button class="action secondary full" onclick="inspectServices()">Bluetooth-Dienste untersuchen</button>
+    <p class="small">FE95 ist eine Xiaomi-bezogene BLE-Service-UUID, bedeutet aber nicht automatisch, dass damit Fahrzeugdaten lesbar sind. Manche Geräte verwenden herstellerspezifische oder geschützte Protokolle.</p>
+  </div>
+  <div class="card">
     <h2>Diagnoseprotokoll</h2>
-    <div id="log" role="log" aria-live="polite">System bereit.</div>
-    <button id="copyBtn">Protokoll kopieren</button>
-    <button id="clearBtn">Protokoll leeren</button>
-  </section>
+    <div id="log" class="log">System bereit.</div>
+    <button class="action secondary full" onclick="clearLog()">Protokoll löschen</button>
+  </div>
+</section>
+
+<section class="page" id="profiles">
+  <div class="card">
+    <h2>Fahrprofile</h2>
+    <p>Diese Auswahl speichert nur deine App-Einstellung. Sie verändert keine Firmware und keine Controllerparameter des Scooters.</p>
+    <label class="field" for="profile">Profil auswählen</label>
+    <select id="profile" onchange="saveProfile()">
+      <option value="standard">Standard</option>
+      <option value="eco">Eco</option>
+      <option value="sport">Sport-Anzeige</option>
+    </select>
+    <div class="item"><span>Aktuelles Profil</span><strong id="profileName">Standard</strong></div>
+    <div class="notice">Die Profilnamen sind lediglich Anzeigeprofile. Sie schalten keine höhere Geschwindigkeit frei und verändern keine Sicherheitseinstellungen des Fahrzeugs.</div>
+  </div>
+</section>
+
+<section class="page" id="setup">
+  <div class="card">
+    <h2>App-Einstellungen</h2>
+    <label class="field" for="brightness">Anzeigehelligkeit</label>
+    <input id="brightness" type="range" min="20" max="100" value="100" oninput="setBrightness(this.value)">
+    <div class="row"><span class="small">Helligkeit</span><strong id="brightnessValue">100%</strong></div>
+    <hr>
+    <label class="field" for="units">Geschwindigkeitseinheit</label>
+    <select id="units" onchange="setUnits()">
+      <option value="kmh">km/h</option>
+      <option value="mph">mph</option>
+    </select>
+    <hr>
+    <button class="action secondary full" onclick="runChecks()">System prüfen</button>
+    <button class="action secondary full" onclick="disconnectScooter()">Bluetooth trennen</button>
+    <button class="action secondary full" onclick="clearLog()">Protokoll löschen</button>
+    <p class="small">Die Einstellungen werden nur während der aktuellen Sitzung verwendet.</p>
+  </div>
+  <div class="card">
+    <h2>Über diese App</h2>
+    <p>SCOOTER RS e-DRIVE ist eine browserbasierte Diagnoseoberfläche für iPhone. Die Verbindung hängt von Browser, Bluetooth-Unterstützung und den tatsächlich vom Scooter angebotenen BLE-Diensten ab.</p>
+    <p class="small">Es werden keine Zugangsdaten benötigt. Es werden keine Daten an einen Server gesendet.</p>
+  </div>
+</section>
+
 </main>
+
+<nav>
+  <button class="active" data-page="cockpit" onclick="showPage('cockpit',this)"><span>◉</span>Cockpit</button>
+  <button data-page="rides" onclick="showPage('rides',this)"><span>⌖</span>Fahrten</button>
+  <button data-page="diagnose" onclick="showPage('diagnose',this)"><span>⌕</span>Diagnose</button>
+  <button data-page="profiles" onclick="showPage('profiles',this)"><span>⚙</span>Profile</button>
+  <button data-page="setup" onclick="showPage('setup',this)"><span>☷</span>Setup</button>
+</nav>
 
 <script>
 "use strict";
 
-const FE95 = "0000fe95-0000-1000-8000-00805f9b34fb";
+const $ = id => document.getElementById(id);
 
 let scooterDevice = null;
 let scooterServer = null;
-let scooterService = null;
+let discoveredServices = [];
+let discoveredCharacteristics = [];
+let watchId = null;
+let rideActive = false;
+let rideStart = null;
+let rideElapsedBeforePause = 0;
+let durationTimer = null;
+let lastPosition = null;
+let distanceMeters = 0;
+let maxSpeedKmh = 0;
+let currentSpeedKmh = 0;
+let gpsPoints = [];
+let unit = "kmh";
 
-const $ = id => document.getElementById(id);
+const FE95_UUID = "0000fe95-0000-1000-8000-00805f9b34fb";
 
 function log(message) {
   const time = new Date().toLocaleTimeString("de-DE");
-  const line = "[" + time + "] " + message;
-  const area = $("log");
-
-  area.textContent += "\n" + line;
-  area.scrollTop = area.scrollHeight;
+  const el = $("log");
+  el.textContent += "\n[" + time + "] " + message;
+  el.scrollTop = el.scrollHeight;
 }
 
-function setBluetoothStatus(message, state = "") {
-  $("btStatus").textContent = message;
-  $("btDot").className = "dot" + (state ? " " + state : "");
+function clearLog() {
+  $("log").textContent = "Protokoll geleert.";
 }
 
-function updateButtons() {
-  const connected = !!scooterServer?.connected;
-
-  $("connectBtn").disabled = connected;
-  $("inspectBtn").disabled = !connected;
-  $("readBtn").disabled = !connected;
-  $("disconnectBtn").disabled = !connected;
+function setBadge(id, text, state = "") {
+  const el = $(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = "badge" + (state ? " " + state : "");
 }
 
-function getErrorMessage(error) {
-  if (!error) return "Unbekannter Fehler";
-  return error.message || String(error);
+function showPage(page, button) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+  $(page).classList.add("active");
+  if (button) button.classList.add("active");
+}
+
+function setConnectionStatus(connected) {
+  $("btStatus").textContent = connected ? "Verbunden" : "Getrennt";
+  setBadge("mainStatus", connected ? "Bluetooth verbunden" : "Nicht verbunden",
+    connected ? "good" : "warn");
+  setBadge("connectionCheck", connected ? "Verbunden" : "Nicht verbunden",
+    connected ? "good" : "warn");
+}
+
+function browserBluetoothAvailable() {
+  return !!(navigator.bluetooth &&
+    typeof navigator.bluetooth.requestDevice === "function");
 }
 
 async function connectScooter() {
-  if (!navigator.bluetooth) {
-    log("Web Bluetooth ist nicht verfügbar.");
-    log("Bitte Bluefy verwenden und die Seite über HTTPS öffnen.");
-    alert("Web Bluetooth ist in diesem Browser nicht verfügbar.");
+  if (!browserBluetoothAvailable()) {
+    log("Web Bluetooth ist in diesem Browser nicht verfügbar.");
+    alert("Dieser Browser stellt Web Bluetooth nicht bereit. Prüfe, ob Bluefy Bluetooth-Verbindungen aus Webseiten unterstützt.");
+    setBadge("bluetoothCheck", "Nicht verfügbar", "bad");
+    return;
+  }
+
+  if (!window.isSecureContext) {
+    log("Die Seite ist kein sicherer Kontext. HTTPS wird benötigt.");
+    alert("Öffne die GitHub-Seite über HTTPS. Web Bluetooth funktioniert normalerweise nicht auf unsicheren HTTP-Seiten.");
     return;
   }
 
@@ -231,240 +316,407 @@ async function connectScooter() {
 
     scooterDevice = await navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
-      optionalServices: [FE95]
+      optionalServices: [FE95_UUID]
     });
 
-    $("deviceName").textContent =
-      scooterDevice.name || "Unbenanntes Gerät";
+    if (!scooterDevice) {
+      log("Kein Gerät ausgewählt.");
+      return;
+    }
 
-    log("Ausgewähltes Gerät: " +
-      (scooterDevice.name || "Unbenanntes Gerät"));
+    log("Ausgewähltes Gerät: " + (scooterDevice.name || "Name nicht verfügbar"));
 
-    scooterDevice.addEventListener(
-      "gattserverdisconnected",
-      onDisconnected
-    );
+    scooterDevice.addEventListener("gattserverdisconnected", () => {
+      scooterServer = null;
+      discoveredServices = [];
+      discoveredCharacteristics = [];
+      setConnectionStatus(false);
+      setBadge("serviceCheck", "Nicht verbunden", "warn");
+      setBadge("characteristicCheck", "Nicht verbunden", "warn");
+      log("Bluetooth-Verbindung getrennt.");
+    });
+
+    if (!scooterDevice.gatt) {
+      throw new Error("Das Gerät stellt keine GATT-Verbindung bereit.");
+    }
 
     log("Verbinde über Bluetooth GATT ...");
-
     scooterServer = await scooterDevice.gatt.connect();
 
-    setBluetoothStatus("Verbunden", "online");
+    setConnectionStatus(true);
+    setBadge("bluetoothCheck", "Verfügbar", "good");
     log("GATT-Verbindung hergestellt.");
 
-    updateButtons();
     await inspectServices();
 
   } catch (error) {
-    log("Bluetooth-Fehler: " + getErrorMessage(error));
-    setBluetoothStatus("Verbindung fehlgeschlagen", "error");
-    updateButtons();
+    log("Bluetooth-Fehler: " + error.message);
+    setConnectionStatus(false);
+
+    if (error.name === "NotFoundError") {
+      log("Keine Geräteauswahl abgeschlossen.");
+    } else if (error.name === "SecurityError") {
+      log("Der Browser hat den Zugriff aus Sicherheitsgründen blockiert.");
+    } else {
+      alert("Bluetooth-Verbindung fehlgeschlagen: " + error.message);
+    }
   }
 }
 
+function disconnectScooter() {
+  try {
+    if (scooterDevice && scooterDevice.gatt && scooterDevice.gatt.connected) {
+      scooterDevice.gatt.disconnect();
+    }
+  } catch (error) {
+    log("Fehler beim Trennen: " + error.message);
+  }
+
+  scooterServer = null;
+  discoveredServices = [];
+  discoveredCharacteristics = [];
+  setConnectionStatus(false);
+  log("Trennung angefordert.");
+}
+
 async function inspectServices() {
-  if (!scooterServer?.connected) {
-    log("Keine aktive Bluetooth-Verbindung.");
+  if (!scooterServer || !scooterServer.connected) {
+    log("Zuerst Bluetooth verbinden.");
+    alert("Verbinde zuerst den Scooter über Bluetooth.");
     return;
   }
 
   try {
     log("Suche verfügbare GATT-Dienste ...");
+    discoveredServices = await scooterServer.getPrimaryServices();
+    discoveredCharacteristics = [];
 
-    const services = await scooterServer.getPrimaryServices();
+    log("Gefundene Dienste: " + discoveredServices.length);
 
-    log("Gefundene Dienste: " + services.length);
-
-    scooterService = null;
-
-    for (const service of services) {
+    for (const service of discoveredServices) {
       log("Dienst: " + service.uuid);
 
-      if (service.uuid.toLowerCase() === FE95) {
-        scooterService = service;
-      }
-
       try {
-        const characteristics =
-          await service.getCharacteristics();
+        const chars = await service.getCharacteristics();
 
-        for (const characteristic of characteristics) {
-          const p = characteristic.properties;
+        for (const characteristic of chars) {
+          const properties = characteristic.properties;
           const flags = [];
 
-          if (p.read) flags.push("read");
-          if (p.write) flags.push("write");
-          if (p.writeWithoutResponse) {
-            flags.push("write-no-response");
-          }
-          if (p.notify) flags.push("notify");
-          if (p.indicate) flags.push("indicate");
+          if (properties.read) flags.push("read");
+          if (properties.write) flags.push("write");
+          if (properties.writeWithoutResponse) flags.push("write-no-response");
+          if (properties.notify) flags.push("notify");
+          if (properties.indicate) flags.push("indicate");
 
-          const shortId = characteristic.uuid
-            .split("-")[0]
-            .replace(/^0000/, "");
+          discoveredCharacteristics.push({
+            uuid: characteristic.uuid,
+            service: service.uuid,
+            properties: flags
+          });
 
-          log("  Merkmal: " + shortId +
-            " [" + flags.join(", ") + "]");
+          log("  Merkmal: " + characteristic.uuid +
+            " [" + (flags.join(", ") || "keine lesbaren Eigenschaften") + "]");
         }
       } catch (error) {
-        log("Merkmale konnten nicht aufgelistet werden: " +
-          getErrorMessage(error));
+        log("Merkmale konnten nicht gelesen werden: " + error.message);
       }
     }
 
-    if (!scooterService) {
-      log("Dienst FE95 wurde nicht gefunden.");
-    } else {
-      log("Dienst FE95 ist verfügbar.");
+    setBadge("serviceCheck", discoveredServices.length + " gefunden",
+      discoveredServices.length ? "good" : "warn");
+
+    setBadge("characteristicCheck",
+      discoveredCharacteristics.length + " gefunden",
+      discoveredCharacteristics.length ? "good" : "warn");
+
+    if (discoveredServices.length === 0) {
+      log("Keine zugänglichen GATT-Dienste gefunden.");
+      log("FE95 kann im Werbepaket erscheinen, ohne als zugänglicher GATT-Dienst verfügbar zu sein.");
     }
 
   } catch (error) {
-    log("Fehler bei der Dienstsuche: " +
-      getErrorMessage(error));
+    log("Dienstsuche fehlgeschlagen: " + error.message);
+    setBadge("serviceCheck", "Fehler", "bad");
   }
 }
 
-async function readScooterCharacteristics() {
-  if (!scooterServer?.connected) {
-    alert("Bitte zuerst den Scooter per Bluetooth verbinden.");
-    log("Lesetest abgebrochen: keine Verbindung.");
-    return;
-  }
+function runChecks() {
+  $("browserCheck").textContent = navigator.userAgent.includes("iPhone")
+    ? "iPhone erkannt" : "Browser erkannt";
 
-  try {
-    const service = scooterService ||
-      await scooterServer.getPrimaryService(FE95);
-
-    for (const shortId of ["0004", "0005"]) {
-      const uuid =
-        "0000" + shortId + "-0000-1000-8000-00805f9b34fb";
-
-      try {
-        const characteristic =
-          await service.getCharacteristic(uuid);
-
-        if (!characteristic.properties.read) {
-          log(shortId + ": Lesen nicht erlaubt.");
-          continue;
-        }
-
-        const value = await characteristic.readValue();
-        const bytes = [];
-
-        for (let i = 0; i < value.byteLength; i++) {
-          bytes.push(
-            value.getUint8(i).toString(16).padStart(2, "0")
-          );
-        }
-
-        log(
-          shortId + " gelesen (" + value.byteLength +
-          " Byte): " +
-          (bytes.length ? bytes.join(" ") : "(leer)")
-        );
-
-      } catch (error) {
-        log(shortId + ": Lesefehler: " +
-          getErrorMessage(error));
-      }
-    }
-  } catch (error) {
-    log("Bluetooth-Lesefehler: " + getErrorMessage(error));
-  }
-}
-
-function onDisconnected() {
-  setBluetoothStatus("Nicht verbunden");
-  scooterServer = null;
-  scooterService = null;
-  log("Bluetooth-Verbindung getrennt.");
-  updateButtons();
-}
-
-function disconnectScooter() {
-  log("Trennung angefordert.");
-
-  if (scooterDevice?.gatt?.connected) {
-    scooterDevice.gatt.disconnect();
+  if (browserBluetoothAvailable()) {
+    setBadge("bluetoothCheck", "API verfügbar", "good");
   } else {
-    onDisconnected();
+    setBadge("bluetoothCheck", "Nicht verfügbar", "bad");
   }
+
+  setConnectionStatus(!!(scooterServer && scooterServer.connected));
+
+  if ("geolocation" in navigator) {
+    setBadge("gpsCheck", "API verfügbar", "good");
+  } else {
+    setBadge("gpsCheck", "Nicht verfügbar", "bad");
+  }
+
+  log("Systemdiagnose aktualisiert.");
 }
 
-function requestGPS() {
-  if (!navigator.geolocation) {
-    log("GPS/Geolocation wird nicht unterstützt.");
+function enableGPS() {
+  if (!("geolocation" in navigator)) {
+    alert("Dieser Browser unterstützt keine GPS-Positionsabfrage.");
+    setBadge("gpsPermission", "Nicht verfügbar", "bad");
     return;
   }
 
-  log("GPS-Positionsabfrage gestartet.");
+  if (!window.isSecureContext) {
+    alert("GPS benötigt normalerweise eine sichere HTTPS-Seite.");
+    return;
+  }
 
-  navigator.geolocation.getCurrentPosition(
+  if (watchId !== null) {
+    log("GPS ist bereits aktiv.");
+    return;
+  }
+
+  setBadge("gpsPermission", "Angefordert", "warn");
+  $("gpsStatus").textContent = "Suche ...";
+
+  watchId = navigator.geolocation.watchPosition(
     position => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-      const accuracy = position.coords.accuracy;
+      const c = position.coords;
+      const lat = c.latitude;
+      const lon = c.longitude;
 
+      $("gpsStatus").textContent = "Aktiv";
+      setBadge("gpsPermission", "Erlaubt", "good");
       $("gpsPosition").textContent =
-        lat.toFixed(6) + ", " + lon.toFixed(6);
-
+        lat.toFixed(5) + ", " + lon.toFixed(5);
       $("gpsAccuracy").textContent =
-        Math.round(accuracy) + " m";
+        Math.round(c.accuracy) + " m";
 
-      log("GPS-Position empfangen.");
-      log("Koordinaten: " + lat + ", " + lon);
-      log("Genauigkeit: " + Math.round(accuracy) + " m");
+      if (c.speed !== null && Number.isFinite(c.speed)) {
+        currentSpeedKmh = Math.max(0, c.speed * 3.6);
+      } else {
+        currentSpeedKmh = 0;
+      }
+
+      if (rideActive) {
+        $("speed").innerHTML = formatSpeed(currentSpeedKmh) +
+          '<small> ' + (unit === "mph" ? "mph" : "km/h") + "</small>";
+
+        maxSpeedKmh = Math.max(maxSpeedKmh, currentSpeedKmh);
+        $("maxSpeed").textContent =
+          formatSpeed(maxSpeedKmh) + " km/h";
+
+        if (lastPosition) {
+          const delta = haversine(
+            lastPosition.latitude, lastPosition.longitude, lat, lon
+          );
+
+          if (delta < 100 && delta > 0) {
+            distanceMeters += delta;
+          }
+        }
+
+        lastPosition = { latitude: lat, longitude: lon };
+        gpsPoints.push({
+          time: new Date(position.timestamp).toISOString(),
+          latitude: lat,
+          longitude: lon,
+          speedKmh: currentSpeedKmh,
+          accuracy: c.accuracy
+        });
+
+        updateDistance();
+      } else {
+        lastPosition = { latitude: lat, longitude: lon };
+      }
     },
     error => {
+      $("gpsStatus").textContent = "Fehler";
+      setBadge("gpsPermission", "Fehler", "bad");
       log("GPS-Fehler: " + error.message);
     },
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
-    }
+    { enableHighAccuracy: true, maximumAge: 1000, timeout: 15000 }
   );
+
+  log("GPS-Positionsabfrage gestartet.");
 }
 
-async function copyLog() {
-  const text = $("log").textContent;
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const rad = x => x * Math.PI / 180;
+  const dLat = rad(lat2 - lat1);
+  const dLon = rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(rad(lat1)) * Math.cos(rad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
 
-  try {
-    await navigator.clipboard.writeText(text);
-    log("Protokoll in die Zwischenablage kopiert.");
-  } catch (error) {
-    const area = document.createElement("textarea");
-    area.value = text;
-    document.body.appendChild(area);
-    area.select();
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
 
-    const success = document.execCommand("copy");
-    area.remove();
-
-    log(success
-      ? "Protokoll kopiert."
-      : "Kopieren fehlgeschlagen. Bitte manuell markieren.");
+function startRide() {
+  if (rideActive) {
+    log("Eine Fahrt läuft bereits.");
+    return;
   }
+
+  rideActive = true;
+  rideStart = Date.now();
+  rideElapsedBeforePause = 0;
+  lastPosition = null;
+
+  if (!watchId) enableGPS();
+
+  if (durationTimer) clearInterval(durationTimer);
+  durationTimer = setInterval(updateDuration, 1000);
+
+  log("Fahrt gestartet.");
+  updateDuration();
 }
 
-$("connectBtn").addEventListener("click", connectScooter);
-$("inspectBtn").addEventListener("click", inspectServices);
-$("readBtn").addEventListener("click", readScooterCharacteristics);
-$("disconnectBtn").addEventListener("click", disconnectScooter);
-$("gpsBtn").addEventListener("click", requestGPS);
-$("copyBtn").addEventListener("click", copyLog);
+function stopRide() {
+  if (!rideActive) {
+    log("Es läuft keine Fahrt.");
+    return;
+  }
 
-$("clearBtn").addEventListener("click", () => {
-  $("log").textContent = "Protokoll geleert.";
+  rideActive = false;
+
+  if (rideStart) {
+    rideElapsedBeforePause += Date.now() - rideStart;
+  }
+
+  rideStart = null;
+
+  if (durationTimer) {
+    clearInterval(durationTimer);
+    durationTimer = null;
+  }
+
+  $("speed").innerHTML = '0<small> ' +
+    (unit === "mph" ? "mph" : "km/h") + "</small>";
+
+  log("Fahrt beendet.");
+  updateDuration();
+}
+
+function resetRide() {
+  stopRide();
+  distanceMeters = 0;
+  maxSpeedKmh = 0;
+  gpsPoints = [];
+  lastPosition = null;
+  rideElapsedBeforePause = 0;
+  currentSpeedKmh = 0;
+
+  $("speed").innerHTML = '0<small> ' +
+    (unit === "mph" ? "mph" : "km/h") + "</small>";
+  $("maxSpeed").textContent = "0 km/h";
+  updateDistance();
+  updateDuration();
+
+  log("Fahrtdaten zurückgesetzt.");
+}
+
+function updateDistance() {
+  const km = distanceMeters / 1000;
+  $("distance").textContent = km.toFixed(2);
+  $("rideDistance").textContent = km.toFixed(2) + " km";
+}
+
+function updateDuration() {
+  let ms = rideElapsedBeforePause;
+
+  if (rideActive && rideStart) {
+    ms += Date.now() - rideStart;
+  }
+
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const formatted = String(minutes).padStart(2, "0") + ":" +
+    String(seconds).padStart(2, "0");
+
+  $("duration").textContent = formatted;
+  $("rideDuration").textContent = formatted;
+}
+
+function formatSpeed(kmh) {
+  return unit === "mph"
+    ? (kmh * 0.621371).toFixed(1)
+    : kmh.toFixed(1);
+}
+
+function exportCSV() {
+  if (!gpsPoints.length) {
+    alert("Es sind noch keine GPS-Fahrtdaten vorhanden.");
+    return;
+  }
+
+  const rows = [
+    ["Zeit", "Breitengrad", "Längengrad", "Geschwindigkeit_kmh", "Genauigkeit_m"],
+    ...gpsPoints.map(p => [
+      p.time, p.latitude, p.longitude, p.speedKmh, p.accuracy
+    ])
+  ];
+
+  const csv = rows.map(row =>
+    row.map(value => '"' + String(value).replace(/"/g, '""') + '"').join(";")
+  ).join("\r\n");
+
+  const blob = new Blob(["\uFEFF" + csv], {
+    type: "text/csv;charset=utf-8;"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "scooter-fahrt.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  log("CSV-Datei exportiert.");
+}
+
+function saveProfile() {
+  const select = $("profile");
+  $("profileName").textContent =
+    select.options[select.selectedIndex].text;
+  log("Anzeigeprofil ausgewählt: " + $("profileName").textContent);
+}
+
+function setBrightness(value) {
+  $("brightnessValue").textContent = value + "%";
+  document.body.style.filter = "brightness(" + (Number(value) / 100) + ")";
+}
+
+function setUnits() {
+  unit = $("units").value === "mph" ? "mph" : "kmh";
+
+  $("speed").innerHTML = formatSpeed(currentSpeedKmh) +
+    '<small> ' + (unit === "mph" ? "mph" : "km/h") + "</small>";
+
+  log("Geschwindigkeitseinheit: " + $("units").selectedOptions[0].text);
+}
+
+window.addEventListener("beforeunload", () => {
+  if (scooterDevice && scooterDevice.gatt && scooterDevice.gatt.connected) {
+    scooterDevice.gatt.disconnect();
+  }
+
+  if (watchId !== null && navigator.geolocation) {
+    navigator.geolocation.clearWatch(watchId);
+  }
 });
 
+runChecks();
 log("SCOOTER RS e-DRIVE gestartet.");
 log("Bereit für Bluetooth- und GPS-Diagnose.");
-
-if (!window.isSecureContext) {
-  log("Hinweis: HTTPS wird für Bluetooth benötigt.");
-}
 </script>
 </body>
 </html>
