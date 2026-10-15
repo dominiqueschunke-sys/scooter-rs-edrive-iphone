@@ -1,6 +1,5 @@
 
 name: Scooter RS iOS Build
-
 on:
   workflow_dispatch:
 
@@ -25,12 +24,11 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
 
-      - name: Capacitor initialisieren
-        run: npx cap sync ios
-
       - name: iOS-Projekt erzeugen
         run: npx cap add ios
-
+ 
+      - name: Capacitor initialisieren         run: npx cap sync ios
+        run:  npx cap sync ios
       - name: Projektdateien diagnostizieren
         if: always()
         run: |
