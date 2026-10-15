@@ -1,11 +1,16 @@
 
 name: Scooter RS iOS Build
+
 on:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: macos-latest
+    timeout-minutes: 30
 
     steps:
       - name: Repository auschecken
@@ -15,42 +20,53 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: package.json
+
+      - name: Projektdateien prüfen
+        run: |
+          test -f index.html
+          test -f package.json
+          test -f capacitor.config.json
+          echo "Projektdateien vorhanden."
 
       - name: Abhängigkeiten installieren
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Web-App vorbereiten
         run: |
           mkdir -p www
           cp index.html www/index.html
+          test -s www/index.html
 
       - name: iOS-Projekt erzeugen
         run: npx cap add ios
- 
-      - name: Capacitor initialisieren         run: npx cap sync ios
-        run:  npx cap sync ios
-      - name: Projektdateien diagnostizieren
-        if: always()
-        run: |
-          echo "Xcode-Projekte:"
-          find . \( -name "*.xcodeproj" -o -name "*.xcworkspace" \) -print
 
-      - name: iOS-App ohne Signierung bauen
+      - name: Capacitor synchronisieren
+        run: npx cap sync ios
+
+      - name: Xcode-Projekt prüfen
         run: |
+          find ios -name "*.xcodeproj" -print
+          test -d ios/App/App.xcodeproj
+
+      - name: iOS-App bauen
+        run: |
+          set -o pipefail
           xcodebuild \
             -project ios/App/App.xcodeproj \
             -scheme App \
             -sdk iphoneos \
             -configuration Debug \
-            -derivedDataPath build-output \
+            -derivedDataPath "$PWD/build-output" \
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      - name: Build-Ergebnis speichern
+      - name: Build-Ergebnis hochladen
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: scooter-rs-build-debug
+          name: scooter-rs-ios-build
           path: build-output/Build/Products/Debug-iphoneos/
           if-no-files-found: warn
           retention-days: 3
