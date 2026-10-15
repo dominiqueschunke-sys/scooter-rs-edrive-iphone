@@ -1,0 +1,20 @@
+
+name: Scooter RS iOS Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Xcode Version anzeigen
+        run: xcodebuild -version
+
+      - name: Projektdateien suchen
+        run: |
+          echo "Suche nach iOS-Projekten..."
+          find . -maxdepth 4 \( -name "*.xcodeproj" -o -name "*.xcworkspace" -o -name "Package.swift" \)
