@@ -48,13 +48,3 @@ jobs:
           path: build-output/Build/Products/Debug-iphoneos/
           if-no-files-found: warn
           retention-days: 3
-
-
-      - name: Build-Ergebnis speichern
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: scooter-rs-build-debug
-          path: build-output/Build/Products/Debug-iphoneos/
-          if-no-files-found: warn
-          retention-days: 3
