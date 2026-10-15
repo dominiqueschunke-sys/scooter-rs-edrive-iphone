@@ -1,0 +1,14 @@
+
+{
+  "name": "scooter-rs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo Web-App bereit"
+  },
+  "dependencies": {
+    "@capacitor/core": "latest",
+    "@capacitor/ios": "latest",
+    "@capacitor/cli": "latest"
+  }
+}
