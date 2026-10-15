@@ -25,10 +25,18 @@ jobs:
           mkdir -p www
           cp index.html www/index.html
 
+      - name: Capacitor initialisieren
+        run: npx cap sync ios
+
       - name: iOS-Projekt erzeugen
         run: npx cap add ios
 
-      
+      - name: Projektdateien diagnostizieren
+        if: always()
+        run: |
+          echo "Xcode-Projekte:"
+          find . \( -name "*.xcodeproj" -o -name "*.xcworkspace" \) -print
+
       - name: iOS-App ohne Signierung bauen
         run: |
           xcodebuild \
