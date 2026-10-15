@@ -7,14 +7,33 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+
     steps:
       - name: Repository auschecken
         uses: actions/checkout@v4
 
-      - name: Xcode Version anzeigen
-        run: xcodebuild -version
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-      - name: Projektdateien suchen
+      - name: Abhängigkeiten installieren
+        run: npm install
+
+      - name: Web-App vorbereiten
         run: |
-          echo "Suche nach iOS-Projekten..."
-          find . -maxdepth 4 \( -name "*.xcodeproj" -o -name "*.xcworkspace" -o -name "Package.swift" \)
+          mkdir -p www
+          cp index.html www/index.html
+
+      - name: iOS-Projekt erzeugen
+        run: npx cap add ios
+
+      - name: iOS-App ohne Signierung bauen
+        run: |
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build
