@@ -28,6 +28,7 @@ jobs:
       - name: iOS-Projekt erzeugen
         run: npx cap add ios
 
+      
       - name: iOS-App ohne Signierung bauen
         run: |
           xcodebuild \
@@ -38,6 +39,16 @@ jobs:
             -derivedDataPath build-output \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Build-Ergebnis speichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scooter-rs-build-debug
+          path: build-output/Build/Products/Debug-iphoneos/
+          if-no-files-found: warn
+          retention-days: 3
+
 
       - name: Build-Ergebnis speichern
         if: always()
