@@ -6,37 +6,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#090909">
 <title>RS e-DRIVE | Performance</title>
-
 <style>
-:root{
-  --bg:#090909;
-  --panel:#151515;
-  --panel2:#1d1d1d;
-  --red:#ff252f;
-  --red-dark:#a4000a;
-  --white:#f4f4f4;
-  --muted:#858585;
-  --green:#57e99a;
-  --line:#333;
-}
+:root{--bg:#090909;--panel:#151515;--red:#ff252f;--white:#f4f4f4;--muted:#858585;--green:#57e99a}
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--white);
-  font-family:-apple-system,BlinkMacSystemFont,"Arial",sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
-  background:
-   repeating-linear-gradient(125deg,transparent 0 7px,#ffffff03 8px,#ffffff03 9px),
-   radial-gradient(ellipse at 50% 0%,#501015 0%,transparent 48%);
-}
-header{
-  padding:18px 18px 14px;
-  display:flex;justify-content:space-between;align-items:center;
-  border-bottom:1px solid #5d171b;
-  background:linear-gradient(180deg,#191919,#0b0b0b);
-}
+body{margin:0;background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:repeating-linear-gradient(125deg,transparent 0 7px,#ffffff03 8px,#ffffff03 9px),radial-gradient(ellipse at 50% 0%,#501015 0%,transparent 48%)}
+header{padding:18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #5d171b;background:linear-gradient(180deg,#191919,#0b0b0b)}
 .brand{font-size:23px;font-weight:950;letter-spacing:2px;font-style:italic}
 .brand span{color:var(--red)}
 .subtitle{font-size:9px;letter-spacing:2px;color:#aaa;margin-top:4px}
@@ -44,360 +19,203 @@ header{
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#666;margin-right:5px}
 .dot.on{background:var(--green);box-shadow:0 0 8px var(--green)}
 main{max-width:600px;margin:auto;padding:13px 13px 100px}
-.page{display:none}
-.page.active{display:block}
-.card{
-  position:relative;overflow:hidden;
-  background:linear-gradient(145deg,#1c1c1c,#101010);
-  border:1px solid #343434;border-radius:15px;
-  padding:16px;margin-bottom:12px;
-  box-shadow:0 8px 22px #0007;
-}
-.card:before{
-  content:"";position:absolute;left:0;top:0;width:3px;height:36px;
-  background:var(--red);
-}
+.page{display:none}.page.active{display:block}
+.card{position:relative;overflow:hidden;background:linear-gradient(145deg,#1c1c1c,#101010);border:1px solid #343434;border-radius:15px;padding:16px;margin-bottom:12px;box-shadow:0 8px 22px #0007}
+.card:before{content:"";position:absolute;left:0;top:0;width:3px;height:36px;background:var(--red)}
 .kicker{font-size:10px;color:#aaa;letter-spacing:1.8px;font-weight:800}
 .hero{text-align:center;padding:17px 10px 13px}
-.hero .kicker{margin-bottom:4px}
-.speed{
-  font-size:94px;line-height:1.04;font-weight:900;letter-spacing:-5px;
-  font-variant-numeric:tabular-nums;
-  text-shadow:0 0 28px #ff252f25;
-}
+.speed{font-size:94px;line-height:1.04;font-weight:900;letter-spacing:-5px;font-variant-numeric:tabular-nums}
 .speed span{font-size:17px;letter-spacing:0;color:#bbb}
-.gauge{
-  position:relative;height:7px;max-width:290px;margin:12px auto;
-  border-radius:10px;background:#343434;overflow:hidden;
-  transform:skewX(-22deg);
-}
-.gauge-fill{
-  height:100%;width:0;
-  background:linear-gradient(90deg,#8d0000,var(--red),#ff7777);
-  box-shadow:0 0 12px var(--red);transition:width .25s;
-}
+.gauge{height:7px;max-width:290px;margin:12px auto;border-radius:10px;background:#343434;overflow:hidden;transform:skewX(-22deg)}
+.gauge-fill{height:100%;width:0;background:linear-gradient(90deg,#8d0000,var(--red),#ff7777);box-shadow:0 0 12px var(--red);transition:width .25s}
 .micro{font-size:11px;color:var(--muted);line-height:1.5}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.metric{
-  background:linear-gradient(145deg,#202020,#131313);
-  border:1px solid #353535;border-radius:12px;padding:14px;min-width:0;
-}
+.metric{background:linear-gradient(145deg,#202020,#131313);border:1px solid #353535;border-radius:12px;padding:14px;min-width:0}
 .metric-head{font-size:10px;color:#aaa;letter-spacing:1px}
 .metric-value{font-size:27px;font-weight:900;margin:8px 0 4px}
-.red{color:var(--red)}
-.green{color:var(--green)}
-.battery{
-  width:100%;height:6px;background:#333;border-radius:8px;
-  overflow:hidden;margin-top:10px;
-}
+.red{color:var(--red)}.green{color:var(--green)}
+.battery{height:6px;background:#333;border-radius:8px;overflow:hidden;margin-top:10px}
 .battery-fill{height:100%;width:0;background:var(--green);transition:width .3s}
-.section-title{
-  font-size:12px;font-weight:900;letter-spacing:1.6px;
-  margin:0 0 13px;
-}
+.section-title{font-size:12px;font-weight:900;letter-spacing:1.6px;margin:0 0 13px}
 button,select,input{font:inherit}
-button{
-  color:white;background:#242424;border:1px solid #454545;
-  border-radius:9px;padding:13px 9px;font-size:12px;font-weight:800;
-  cursor:pointer;touch-action:manipulation;
-}
-button:active{transform:scale(.98)}
-button:disabled{opacity:.4;cursor:not-allowed}
-.btn-red{
-  background:linear-gradient(115deg,#ff303a,#a80008);
-  border-color:#ff3b44;
-}
+button{color:white;background:#242424;border:1px solid #454545;border-radius:9px;padding:13px 9px;font-size:12px;font-weight:800;cursor:pointer;touch-action:manipulation}
+button:active{transform:scale(.98)}button:disabled{opacity:.4;cursor:not-allowed}
+.btn-red{background:linear-gradient(115deg,#ff303a,#a80008);border-color:#ff3b44}
 .btn-wide{width:100%;margin-top:9px}
-.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .btn-grid button{width:100%}
 .mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
 .mode-grid button{padding:13px 2px;font-size:11px}
 .mode-grid .chosen{background:#421418;border:1px solid var(--red);color:#ff747a}
-.control{
-  min-height:88px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:8px;
-  background:linear-gradient(145deg,#252525,#131313);
-}
-.control .symbol{font-size:24px;color:var(--red)}
-.control small{font-size:10px;letter-spacing:1px}
+.control{min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(145deg,#252525,#131313)}
+.control .symbol{font-size:24px;color:var(--red)}.control small{font-size:10px;letter-spacing:1px}
 .status-line{font-size:12px;color:#bbb;line-height:1.7;overflow-wrap:anywhere}
-.note{
-  background:#261719;border:1px solid #5a2429;border-radius:9px;
-  padding:11px;font-size:11px;color:#e2babc;line-height:1.55;margin-top:12px;
-}
+.note{background:#261719;border:1px solid #5a2429;border-radius:9px;padding:11px;font-size:11px;color:#e2babc;line-height:1.55;margin-top:12px}
 hr{border:0;border-top:1px solid #333;margin:15px 0}
-pre{
-  white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;
-  max-height:330px;overflow:auto;background:#090909;border-radius:9px;
-  padding:12px;font-size:10px;line-height:1.55;color:#ddd;
-}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;max-height:330px;overflow:auto;background:#090909;border-radius:9px;padding:12px;font-size:10px;line-height:1.55;color:#ddd}
 label{font-size:11px;color:#aaa}
 select{width:100%;background:#222;color:white;border:1px solid #444;border-radius:8px;padding:12px;margin-top:7px}
 input[type=range]{width:100%;accent-color:var(--red)}
-nav{
-  position:fixed;z-index:10;bottom:0;left:0;right:0;
-  display:grid;grid-template-columns:repeat(5,1fr);
-  background:#101010f5;border-top:1px solid #3a3a3a;
-  padding-bottom:env(safe-area-inset-bottom);
-  backdrop-filter:blur(16px);
-}
-nav button{
-  background:transparent;border:0;border-radius:0;padding:11px 0 9px;
-  color:#888;font-size:9px;letter-spacing:.4px;
-}
+nav{position:fixed;z-index:10;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,1fr);background:#101010f5;border-top:1px solid #3a3a3a;padding-bottom:env(safe-area-inset-bottom);backdrop-filter:blur(16px)}
+nav button{background:transparent;border:0;border-radius:0;padding:11px 0 9px;color:#888;font-size:9px;letter-spacing:.4px}
 nav button.active{color:var(--red);background:linear-gradient(0deg,#ff252f13,transparent)}
 .nav-icon{display:block;font-size:18px;margin-bottom:4px}
 footer{text-align:center;color:#555;font-size:9px;letter-spacing:1px;padding:10px}
-@media(max-width:360px){
- .speed{font-size:77px}
- .brand{font-size:20px}
- main{padding-left:9px;padding-right:9px}
-}
+@media(max-width:360px){.speed{font-size:77px}.brand{font-size:20px}main{padding-left:9px;padding-right:9px}}
 </style>
 </head>
-
 <body>
 <header>
-  <div>
-    <div class="brand">RS <span>e-DRIVE</span></div>
-    <div class="subtitle">ELECTRIC PERFORMANCE</div>
-  </div>
-  <div class="connection">
-    <div><span id="btDot" class="dot"></span><span id="btHeader">OFFLINE</span></div>
-    <div style="margin-top:6px">XIAOMI · MODEL 5</div>
-  </div>
+  <div><div class="brand">RS <span>e-DRIVE</span></div><div class="subtitle">ELECTRIC PERFORMANCE</div></div>
+  <div class="connection"><div><span id="btDot" class="dot"></span><span id="btHeader">OFFLINE</span></div><div style="margin-top:6px">XIAOMI · MODEL 5</div></div>
 </header>
 
 <main>
-  <!-- COCKPIT -->
-  <section id="cockpit" class="page active">
-    <div class="card hero">
-      <div class="kicker">LIVE SPEED / GPS</div>
-      <div class="speed"><span id="speed">0</span><span id="speedUnit"> km/h</span></div>
-      <div class="gauge"><div class="gauge-fill" id="speedGauge"></div></div>
-      <div class="micro" id="gpsStatus">GPS nicht aktiviert</div>
-      <button class="btn-red btn-wide" onclick="enableGPS()">GPS AKTIVIEREN</button>
-    </div>
-
+<section id="cockpit" class="page active">
+  <div class="card hero">
+    <div class="kicker">LIVE SPEED / GPS</div>
+    <div class="speed"><span id="speed">0</span><span id="speedUnit"> km/h</span></div>
+    <div class="gauge"><div class="gauge-fill" id="speedGauge"></div></div>
+    <div class="micro" id="gpsStatus">GPS nicht aktiviert</div>
+    <button class="btn-red btn-wide" onclick="enableGPS()">GPS AKTIVIEREN</button>
+  </div>
+  <div class="grid">
+    <div class="metric"><div class="metric-head">BATTERIE</div><div class="metric-value" id="batteryValue">--%</div><div class="micro" id="batteryStatus">Noch kein Messwert</div><div class="battery"><div class="battery-fill" id="batteryFill"></div></div></div>
+    <div class="metric"><div class="metric-head">DISTANZ</div><div class="metric-value"><span id="distance">0.00</span><span style="font-size:12px"> km</span></div><div class="micro">GPS-Fahrtstrecke</div></div>
+    <div class="metric"><div class="metric-head">FAHRMODUS</div><div class="metric-value red" id="modeValue">--</div><div class="micro" id="modeInfo">Nicht ausgelesen</div></div>
+    <div class="metric"><div class="metric-head">FAHRZEIT</div><div class="metric-value" id="duration">00:00</div><div class="micro">Aktuelle Fahrt</div></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="section-title">VEHICLE CONNECTION</div><div class="status-line" id="deviceName">Kein Scooter verbunden</div>
+    <button class="btn-red btn-wide" onclick="connectScooter()">BLUETOOTH VERBINDEN</button>
+    <div class="btn-grid"><button onclick="readBattery()">AKKU LESEN</button><button onclick="inspectServices()">DIAGNOSE</button></div>
+  </div>
+  <div class="card">
+    <div class="section-title">QUICK CONTROLS</div>
     <div class="grid">
-      <div class="metric">
-        <div class="metric-head">BATTERIE</div>
-        <div class="metric-value" id="batteryValue">--%</div>
-        <div class="micro" id="batteryStatus">Noch kein Messwert</div>
-        <div class="battery"><div class="battery-fill" id="batteryFill"></div></div>
-      </div>
-      <div class="metric">
-        <div class="metric-head">DISTANZ</div>
-        <div class="metric-value"><span id="distance">0.00</span><span style="font-size:12px"> km</span></div>
-        <div class="micro">GPS-Fahrtstrecke</div>
-      </div>
-      <div class="metric">
-        <div class="metric-head">FAHRMODUS</div>
-        <div class="metric-value red" id="modeValue">--</div>
-        <div class="micro" id="modeInfo">Nicht ausgelesen</div>
-      </div>
-      <div class="metric">
-        <div class="metric-head">FAHRZEIT</div>
-        <div class="metric-value" id="duration">00:00</div>
-        <div class="micro">Aktuelle Fahrt</div>
-      </div>
+      <button class="control" onclick="requestVehicleAction('light')"><span class="symbol">☼</span><small id="lightLabel">LICHT · UNBEKANNT</small></button>
+      <button class="control" onclick="requestVehicleAction('lock')"><span class="symbol">▣</span><small id="lockLabel">SPERRE · UNBEKANNT</small></button>
     </div>
+    <div class="note">Licht und Sperre senden keine Befehle, solange das Scooter-Protokoll nicht bestätigt ist.</div>
+  </div>
+</section>
 
-    <div class="card" style="margin-top:12px">
-      <div class="section-title">VEHICLE CONNECTION</div>
-      <div class="status-line" id="deviceName">Kein Scooter verbunden</div>
-      <button class="btn-red btn-wide" onclick="connectScooter()">BLUETOOTH VERBINDEN</button>
-      <div class="btn-grid">
-        <button onclick="readBattery()">AKKU LESEN</button>
-        <button onclick="inspectServices()">DIAGNOSE</button>
-      </div>
+<section id="rides" class="page">
+  <div class="card"><div class="section-title">RIDE CONTROL</div>
+    <div class="grid">
+      <div class="metric"><div class="metric-head">DISTANZ</div><div class="metric-value"><span id="distance2">0.00</span> km</div></div>
+      <div class="metric"><div class="metric-head">ZEIT</div><div class="metric-value" id="duration2">00:00</div></div>
     </div>
+    <button class="btn-red btn-wide" onclick="startRide()">FAHRT STARTEN</button>
+    <div class="btn-grid"><button onclick="stopRide()">STOPP</button><button onclick="resetRide()">RESET</button></div>
+    <button class="btn-wide" onclick="exportCSV()">FAHRT ALS CSV EXPORTIEREN</button>
+    <p class="micro">GPS-Werte stammen vom iPhone und sind keine bestätigte Scooter-Telemetrie.</p>
+  </div>
+</section>
 
-    <div class="card">
-      <div class="section-title">QUICK CONTROLS</div>
-      <div class="grid">
-        <button class="control" onclick="requestVehicleAction('light')">
-          <span class="symbol">☼</span><small id="lightLabel">LICHT · UNBEKANNT</small>
-        </button>
-        <button class="control" onclick="requestVehicleAction('lock')">
-          <span class="symbol">▣</span><small id="lockLabel">SPERRE · UNBEKANNT</small>
-        </button>
-      </div>
-      <div class="note">Diese Tasten senden noch keine Scooter-Befehle. Das passende Protokoll muss erst nachgewiesen werden.</div>
-    </div>
-  </section>
+<section id="diagnose" class="page">
+  <div class="card">
+    <div class="section-title">SYSTEM DIAGNOSTICS</div>
+    <div id="diagSummary" class="status-line">Bereit zur Diagnose.</div>
+    <button class="btn-red btn-wide" onclick="inspectServices()">BLUETOOTH-DIENSTE SCANNEN</button>
+    <button class="btn-wide" onclick="readBattery()">AKKUSTAND AUSLESEN</button>
+    <button class="btn-wide" onclick="readRawCharacteristics()">LESBARE ROHDATEN AUSLESEN</button>
+    <button class="btn-wide" onclick="subscribeNotifications()">NOTIFICATIONS AKTIVIEREN</button>
+    <button class="btn-wide" onclick="runChecks()">BROWSER PRÜFEN</button>
+    <button class="btn-wide" onclick="clearLog()">PROTOKOLL LÖSCHEN</button>
+    <pre id="diagnostics">RS e-DRIVE bereit.</pre>
+  </div>
+  <div class="card"><div class="section-title">GATT CHARACTERISTICS</div><pre id="characteristicList">Noch keine Merkmale erkannt.</pre></div>
+</section>
 
-  <!-- FAHRT -->
-  <section id="rides" class="page">
-    <div class="card">
-      <div class="section-title">RIDE CONTROL</div>
-      <div class="grid">
-        <div class="metric">
-          <div class="metric-head">DISTANZ</div>
-          <div class="metric-value"><span id="distance2">0.00</span> km</div>
-        </div>
-        <div class="metric">
-          <div class="metric-head">ZEIT</div>
-          <div class="metric-value" id="duration2">00:00</div>
-        </div>
-      </div>
-      <button class="btn-red btn-wide" onclick="startRide()">FAHRT STARTEN</button>
-      <div class="btn-grid">
-        <button onclick="stopRide()">STOPP</button>
-        <button onclick="resetRide()">RESET</button>
-      </div>
-      <button class="btn-wide" onclick="exportCSV()">FAHRT ALS CSV EXPORTIEREN</button>
-      <p class="micro">GPS-Werte kommen vom iPhone und sind nicht die bestätigte Scooter-Telemetrie.</p>
-    </div>
-  </section>
+<section id="profiles" class="page">
+  <div class="card">
+    <div class="section-title">DRIVE SELECT</div>
+    <div class="mode-grid"><button id="modeECO" onclick="selectMode('ECO')">ECO</button><button id="modeSTANDARD" class="chosen" onclick="selectMode('STANDARD')">DYNAMIC</button><button id="modeSPORT" onclick="selectMode('SPORT')">SPORT</button></div>
+    <hr><div class="kicker">BESTÄTIGTER FAHRMODUS</div><div class="metric-value red" id="actualMode">Nicht verfügbar</div>
+    <div class="status-line" id="actualModeInfo">Kein bestätigter Fahrmodus-Datenpunkt.</div>
+    <div class="note">Die Profilauswahl ändert nur die App-Anzeige. Es wird kein Fahrmodus-Befehl gesendet.</div>
+  </div>
+</section>
 
-  <!-- DIAGNOSE -->
-  <section id="diagnose" class="page">
-    <div class="card">
-      <div class="section-title">SYSTEM DIAGNOSTICS</div>
-      <div id="diagSummary" class="status-line">Bereit zur Diagnose.</div>
-      <button class="btn-red btn-wide" onclick="inspectServices()">BLUETOOTH-DIENSTE SCANNEN</button>
-      <button class="btn-wide" onclick="readBattery()">AKKUSTAND AUSLESEN</button>
-      <button class="btn-wide" onclick="subscribeNotifications()">NOTIFICATIONS AKTIVIEREN</button>
-      <button class="btn-wide" onclick="runChecks()">BROWSER PRÜFEN</button>
-      <button class="btn-wide" onclick="clearLog()">PROTOKOLL LÖSCHEN</button>
-      <pre id="diagnostics">RS e-DRIVE bereit.</pre>
-    </div>
-    <div class="card">
-      <div class="section-title">GATT CHARACTERISTICS</div>
-      <pre id="characteristicList">Noch keine Merkmale erkannt.</pre>
-    </div>
-  </section>
-
-  <!-- MODUS -->
-  <section id="profiles" class="page">
-    <div class="card">
-      <div class="section-title">DRIVE SELECT</div>
-      <div class="mode-grid">
-        <button id="modeECO" onclick="selectMode('ECO')">ECO</button>
-        <button id="modeSTANDARD" class="chosen" onclick="selectMode('STANDARD')">DYNAMIC</button>
-        <button id="modeSPORT" onclick="selectMode('SPORT')">SPORT</button>
-      </div>
-      <hr>
-      <div class="kicker">BESTÄTIGTER FAHRMODUS</div>
-      <div class="metric-value red" id="actualMode">Nicht verfügbar</div>
-      <div class="status-line" id="actualModeInfo">Kein bestätigter Fahrmodus-Datenpunkt.</div>
-      <div class="note">Die Auswahl oben verändert nur die App-Anzeige. Erst nach Identifikation des korrekten Protokolls kann die App den realen Fahrmodus sicher auslesen oder ändern.</div>
-    </div>
-  </section>
-
-  <!-- SETUP -->
-  <section id="setup" class="page">
-    <div class="card">
-      <div class="section-title">SYSTEM SETUP</div>
-      <label for="brightness">Cockpit-Helligkeit</label>
-      <input id="brightness" type="range" min="70" max="120" value="100" oninput="setBrightness(this.value)">
-      <hr>
-      <label for="units">Geschwindigkeitseinheit</label>
-      <select id="units" onchange="setUnits(this.value)">
-        <option value="km/h">km/h</option>
-        <option value="mph">mph</option>
-      </select>
-      <hr>
-      <div class="kicker">BLUETOOTH</div>
-      <div class="status-line" id="setupConnection">Nicht verbunden</div>
-      <button class="btn-red btn-wide" onclick="connectScooter()">VERBINDEN</button>
-      <button class="btn-wide" onclick="disconnectScooter()">TRENNEN</button>
-      <hr>
-      <div class="micro">RS e-DRIVE · Xiaomi Electric Scooter 5 · iPhone / Bluefy</div>
-    </div>
-  </section>
-
-  <footer>PERFORMANCE UI · REAL DATA ONLY</footer>
+<section id="setup" class="page">
+  <div class="card">
+    <div class="section-title">SYSTEM SETUP</div>
+    <label for="brightness">Cockpit-Helligkeit</label><input id="brightness" type="range" min="70" max="120" value="100" oninput="setBrightness(this.value)">
+    <hr><label for="units">Geschwindigkeitseinheit</label><select id="units" onchange="setUnits(this.value)"><option value="km/h">km/h</option><option value="mph">mph</option></select>
+    <hr><div class="kicker">BLUETOOTH</div><div class="status-line" id="setupConnection">Nicht verbunden</div>
+    <button class="btn-red btn-wide" onclick="connectScooter()">VERBINDEN</button><button class="btn-wide" onclick="disconnectScooter()">TRENNEN</button>
+    <hr><div class="micro">RS e-DRIVE · Xiaomi Electric Scooter 5 · iPhone / Bluefy</div>
+  </div>
+</section>
+<footer>PERFORMANCE UI · REAL DATA ONLY</footer>
 </main>
 
 <nav>
-  <button class="active" onclick="showPage('cockpit',this)"><span class="nav-icon">◉</span>COCKPIT</button>
-  <button onclick="showPage('rides',this)"><span class="nav-icon">↗</span>FAHRT</button>
-  <button onclick="showPage('diagnose',this)"><span class="nav-icon">⌕</span>DIAGNOSE</button>
-  <button onclick="showPage('profiles',this)"><span class="nav-icon">⚙</span>MODUS</button>
-  <button onclick="showPage('setup',this)"><span class="nav-icon">☷</span>SETUP</button>
+<button class="active" onclick="showPage('cockpit',this)"><span class="nav-icon">◉</span>COCKPIT</button>
+<button onclick="showPage('rides',this)"><span class="nav-icon">↗</span>FAHRT</button>
+<button onclick="showPage('diagnose',this)"><span class="nav-icon">⌕</span>DIAGNOSE</button>
+<button onclick="showPage('profiles',this)"><span class="nav-icon">⚙</span>MODUS</button>
+<button onclick="showPage('setup',this)"><span class="nav-icon">☷</span>SETUP</button>
 </nav>
 
 <script>
 "use strict";
 
-/* Bluetooth-UUIDs */
-const FE95_UUID = "0000fe95-0000-1000-8000-00805f9b34fb";
-const BATTERY_SERVICE = "battery_service";
-const BATTERY_LEVEL = "battery_level";
+const FE95_UUID="0000fe95-0000-1000-8000-00805f9b34fb";
+const BATTERY_SERVICE="battery_service";
+const BATTERY_LEVEL="battery_level";
 
-let scooterDevice = null;
-let scooterServer = null;
-let services = [];
-let characteristics = [];
-let notifications = [];
-let logEntries = [];
-
-let gpsWatch = null;
-let lastPosition = null;
-let rideActive = false;
-let rideStart = 0;
-let rideSeconds = 0;
-let rideTimer = null;
-let distanceKm = 0;
-let units = "km/h";
-let selectedMode = "STANDARD";
-
-const $ = id => document.getElementById(id);
+let scooterDevice=null,scooterServer=null,services=[],characteristics=[],notifications=[],logEntries=[];
+let gpsWatch=null,lastPosition=null,rideActive=false,rideStart=0,rideSeconds=0,rideTimer=null,distanceKm=0;
+let units="km/h",selectedMode="STANDARD";
+const $=id=>document.getElementById(id);
 
 function log(message){
-  const stamp = new Date().toLocaleTimeString();
-  logEntries.push("[" + stamp + "] " + message);
-  if(logEntries.length > 150) logEntries.shift();
-  $("diagnostics").textContent = logEntries.join("\n");
+  const line="["+new Date().toLocaleTimeString()+"] "+message;
+  logEntries.push(line);
+  if(logEntries.length>200)logEntries.shift();
+  $("diagnostics").textContent=logEntries.join("\n");
 }
 
 function showPage(id,button){
-  document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
   $(id).classList.add("active");
-  document.querySelectorAll("nav button").forEach(el=>el.classList.remove("active"));
-  if(button) button.classList.add("active");
-  else {
-    const index=["cockpit","rides","diagnose","profiles","setup"].indexOf(id);
-    if(index>=0) document.querySelectorAll("nav button")[index].classList.add("active");
+  document.querySelectorAll("nav button").forEach(e=>e.classList.remove("active"));
+  if(button)button.classList.add("active");
+  else{
+    const i=["cockpit","rides","diagnose","profiles","setup"].indexOf(id);
+    if(i>=0)document.querySelectorAll("nav button")[i].classList.add("active");
   }
 }
 
 function connected(){
-  return !!(scooterDevice && scooterDevice.gatt &&
-    scooterDevice.gatt.connected && scooterServer);
+  return !!(scooterDevice&&scooterDevice.gatt&&scooterDevice.gatt.connected&&scooterServer);
 }
 
 function setConnectionUI(on){
   $("btDot").classList.toggle("on",on);
   $("btHeader").textContent=on?"CONNECTED":"OFFLINE";
-  $("setupConnection").textContent=on
-    ? "Verbunden mit "+(scooterDevice.name||"Bluetooth-Gerät")
-    : "Nicht verbunden";
+  $("setupConnection").textContent=on?"Verbunden mit "+(scooterDevice.name||"Bluetooth-Gerät"):"Nicht verbunden";
 }
 
 async function connectScooter(){
   if(!navigator.bluetooth){
-    log("Web Bluetooth wird von diesem Browser nicht bereitgestellt.");
+    log("Web Bluetooth ist in diesem Browser nicht verfügbar.");
     $("deviceName").textContent="Web Bluetooth nicht verfügbar";
     return;
   }
-
   try{
     log("Bluetooth-Geräteauswahl geöffnet.");
     scooterDevice=await navigator.bluetooth.requestDevice({
       acceptAllDevices:true,
       optionalServices:[FE95_UUID,BATTERY_SERVICE]
     });
-
     $("deviceName").textContent="Gerät: "+(scooterDevice.name||"Unbenannt");
     scooterDevice.addEventListener("gattserverdisconnected",onDisconnected);
-
     scooterServer=await scooterDevice.gatt.connect();
     setConnectionUI(true);
     log("Verbunden mit "+(scooterDevice.name||"Bluetooth-Gerät"));
-
     await inspectServices();
     await readBattery();
   }catch(error){
@@ -406,10 +224,7 @@ async function connectScooter(){
 }
 
 function onDisconnected(){
-  scooterServer=null;
-  services=[];
-  characteristics=[];
-  notifications=[];
+  scooterServer=null;services=[];characteristics=[];notifications=[];
   setConnectionUI(false);
   $("deviceName").textContent="Verbindung getrennt";
   $("batteryStatus").textContent="Nicht verbunden";
@@ -417,70 +232,40 @@ function onDisconnected(){
 }
 
 function disconnectScooter(){
-  if(scooterDevice && scooterDevice.gatt && scooterDevice.gatt.connected){
-    scooterDevice.gatt.disconnect();
-  }else{
-    onDisconnected();
-  }
+  if(scooterDevice&&scooterDevice.gatt&&scooterDevice.gatt.connected)scooterDevice.gatt.disconnect();
+  else onDisconnected();
 }
 
 async function inspectServices(){
-  if(!connected()){
-    log("Bitte zuerst Bluetooth verbinden.");
-    return;
-  }
-
+  if(!connected()){log("Bitte zuerst Bluetooth verbinden.");return;}
   try{
     services=await scooterServer.getPrimaryServices();
     characteristics=[];
     const lines=[];
-
     for(const service of services){
       lines.push("SERVICE "+service.uuid);
       let chars=[];
-      try{
-        chars=await service.getCharacteristics();
-      }catch(error){
-        lines.push("  Fehler: "+error.message);
-        continue;
-      }
-
+      try{chars=await service.getCharacteristics();}
+      catch(error){lines.push("  Fehler: "+error.message);continue;}
       for(const ch of chars){
         characteristics.push({service,characteristic:ch});
         const p=ch.properties;
-        const flags=[
-          p.read?"READ":"",
-          p.notify?"NOTIFY":"",
-          p.indicate?"INDICATE":"",
-          p.write?"WRITE":"",
-          p.writeWithoutResponse?"WRITE_NO_RESPONSE":""
-        ].filter(Boolean).join(", ")||"NONE";
-
+        const flags=[p.read?"READ":"",p.notify?"NOTIFY":"",p.indicate?"INDICATE":"",p.write?"WRITE":"",p.writeWithoutResponse?"WRITE_NO_RESPONSE":""].filter(Boolean).join(", ")||"NONE";
         lines.push("  "+ch.uuid+" ["+flags+"]");
       }
     }
-
     $("characteristicList").textContent=lines.join("\n")||"Keine Merkmale gefunden.";
-    $("diagSummary").textContent=
-      services.length+" Dienste, "+characteristics.length+" Merkmale gefunden.";
+    $("diagSummary").textContent=services.length+" Dienste, "+characteristics.length+" Merkmale gefunden.";
     log("GATT-Scan abgeschlossen.");
-
-    // Nur bekannte Standard-Batterie-UUIDs automatisch auslesen.
-    const batteryChar=characteristics.find(item=>
-      item.characteristic.properties.read &&
-      isBatteryUUID(item.characteristic.uuid)
-    );
-
-    if(batteryChar) await readBatteryCharacteristic(batteryChar.characteristic);
-    else log("Kein Standard-Akku-Merkmal in der Liste erkannt.");
-  }catch(error){
-    log("Dienstsuche fehlgeschlagen: "+error.message);
-  }
+    const batteryChar=characteristics.find(x=>x.characteristic.properties.read&&isBatteryUUID(x.characteristic.uuid));
+    if(batteryChar)await readBatteryCharacteristic(batteryChar.characteristic);
+    else log("Kein standardisiertes Akku-Merkmal erkannt.");
+  }catch(error){log("Dienstsuche fehlgeschlagen: "+error.message);}
 }
 
 function isBatteryUUID(uuid){
   const u=String(uuid).toLowerCase().replace(/-/g,"");
-  return u==="2a19" || u==="00002a1900001000800000805f9b34fb";
+  return u==="2a19"||u==="00002a1900001000800000805f9b34fb";
 }
 
 async function readBattery(){
@@ -489,23 +274,14 @@ async function readBattery(){
     log("Akku nicht gelesen: keine Verbindung.");
     return;
   }
-
-  // Zuerst den standardisierten Bluetooth Battery Service versuchen.
   try{
     const service=await scooterServer.getPrimaryService(BATTERY_SERVICE);
     const ch=await service.getCharacteristic(BATTERY_LEVEL);
     await readBatteryCharacteristic(ch);
     return;
-  }catch(error){
-    log("Standard-Batterieservice nicht verfügbar: "+error.message);
-  }
-
-  const found=characteristics.find(item=>
-    item.characteristic.properties.read &&
-    isBatteryUUID(item.characteristic.uuid)
-  );
-
-  if(found) await readBatteryCharacteristic(found.characteristic);
+  }catch(error){log("Standard-Batterieservice nicht verfügbar: "+error.message);}
+  const found=characteristics.find(x=>x.characteristic.properties.read&&isBatteryUUID(x.characteristic.uuid));
+  if(found)await readBatteryCharacteristic(found.characteristic);
   else{
     $("batteryValue").textContent="--%";
     $("batteryFill").style.width="0%";
@@ -517,95 +293,85 @@ async function readBattery(){
 async function readBatteryCharacteristic(ch){
   try{
     const value=await ch.readValue();
-    if(value.byteLength<1) throw new Error("Leerer Messwert");
-
-    // Nur bei standardisierter Battery-Level-UUID gilt Byte 0 als Prozent.
-    if(!isBatteryUUID(ch.uuid)){
-      log("Merkmal ist kein standardisierter Battery-Level-Wert.");
-      return;
-    }
-
+    if(value.byteLength<1)throw new Error("Leerer Messwert");
+    if(!isBatteryUUID(ch.uuid)){log("Merkmal ist kein standardisierter Battery-Level-Wert.");return;}
     const level=value.getUint8(0);
-    if(level>100) throw new Error("Wert außerhalb 0 bis 100");
-
+    if(level>100)throw new Error("Wert außerhalb 0 bis 100");
     $("batteryValue").textContent=level+"%";
     $("batteryFill").style.width=level+"%";
     $("batteryFill").style.background=level<=20?"var(--red)":"var(--green)";
     $("batteryStatus").textContent="Echt gelesen · "+new Date().toLocaleTimeString();
     log("Standardisierter Akkustand gelesen: "+level+"%");
-  }catch(error){
-    $("batteryStatus").textContent="Auslesen fehlgeschlagen";
-    log("Akku-Lesefehler: "+error.message);
+  }catch(error){$("batteryStatus").textContent="Auslesen fehlgeschlagen";log("Akku-Lesefehler: "+error.message);}
+}
+
+/* NEU: sichere Rohdaten-Diagnose */
+function bytesToHex(value){
+  const bytes=new Uint8Array(value.buffer,value.byteOffset,value.byteLength);
+  return Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join(" ");
+}
+
+function bytesToAscii(value){
+  const bytes=new Uint8Array(value.buffer,value.byteOffset,value.byteLength);
+  return Array.from(bytes,b=>b>=32&&b<=126?String.fromCharCode(b):".").join("");
+}
+
+async function readRawCharacteristics(){
+  if(!connected()){log("FEHLER: Erst Bluetooth verbinden.");return;}
+  log("Starte Rohdaten-Scan. Es werden keine Schreibbefehle gesendet.");
+  for(const item of characteristics){
+    const ch=item.characteristic;
+    if(!ch.properties.read){log("Übersprungen, nicht lesbar: "+ch.uuid);continue;}
+    try{
+      const value=await ch.readValue();
+      log("READ "+ch.uuid+" | "+value.byteLength+" Byte | HEX: "+bytesToHex(value));
+      log("TEXT "+ch.uuid+" | "+bytesToAscii(value));
+    }catch(error){log("Lesefehler "+ch.uuid+": "+error.message);}
   }
+  log("Rohdaten-Scan abgeschlossen.");
 }
 
 async function subscribeNotifications(){
-  if(!connected()){
-    log("Keine Bluetooth-Verbindung.");
-    return;
-  }
-
+  if(!connected()){log("Keine Bluetooth-Verbindung.");return;}
   let count=0;
   for(const item of characteristics){
     const ch=item.characteristic;
-    if(!ch.properties.notify && !ch.properties.indicate) continue;
-    if(notifications.includes(ch)) continue;
-
+    if(!ch.properties.notify&&!ch.properties.indicate)continue;
+    if(notifications.includes(ch))continue;
     try{
       await ch.startNotifications();
       ch.addEventListener("characteristicvaluechanged",event=>{
         const value=event.target.value;
-        const bytes=[];
-        for(let i=0;i<value.byteLength;i++) bytes.push(value.getUint8(i));
-        log("NOTIFY "+event.target.uuid+": "+
-          bytes.map(b=>b.toString(16).padStart(2,"0")).join(" "));
+        log("NOTIFY "+event.target.uuid+" | "+value.byteLength+" Byte | HEX: "+bytesToHex(value));
+        log("TEXT "+event.target.uuid+" | "+bytesToAscii(value));
       });
-      notifications.push(ch);
-      count++;
+      notifications.push(ch);count++;
       log("Notify aktiviert: "+ch.uuid);
-    }catch(error){
-      log("Notify fehlgeschlagen "+ch.uuid+": "+error.message);
-    }
+    }catch(error){log("Notify fehlgeschlagen "+ch.uuid+": "+error.message);}
   }
-  log(count ? count+" Notification(s) aktiviert." : "Keine neuen Notifications aktiviert.");
+  log(count?count+" Notification(s) aktiviert.":"Keine neuen Notifications aktiviert.");
 }
 
 function requestVehicleAction(action){
-  if(!connected()){
-    log("Aktion nicht möglich: Scooter nicht verbunden.");
-    return;
-  }
-
-  const names={
-    light:"Licht",
-    lock:"Sperre"
-  };
-  log(names[action]+" angefordert, aber kein bestätigter Befehl verfügbar. Es wurde NICHTS an den Scooter geschrieben.");
-  alert(names[action]+": Das Bluetooth-Protokoll ist noch nicht bestätigt. Aus Sicherheitsgründen wurde kein Befehl gesendet.");
+  if(!connected()){log("Aktion nicht möglich: Scooter nicht verbunden.");return;}
+  const name=action==="light"?"Licht":"Sperre";
+  log(name+" angefordert, aber kein bestätigter Befehl verfügbar. Es wurde nichts geschrieben.");
+  alert(name+": Das Protokoll ist noch nicht bestätigt. Es wurde kein Befehl gesendet.");
 }
 
 function selectMode(mode){
   selectedMode=mode;
-  ["ECO","STANDARD","SPORT"].forEach(m=>{
-    $("mode"+m).classList.toggle("chosen",m===mode);
-  });
+  ["ECO","STANDARD","SPORT"].forEach(m=>$("mode"+m).classList.toggle("chosen",m===mode));
   $("modeValue").textContent=mode;
   $("modeInfo").textContent="Lokale Auswahl, nicht vom Scooter bestätigt";
   $("actualMode").textContent="Nicht bestätigt";
   $("actualModeInfo").textContent="Nur die Anzeige wurde geändert. Kein Fahrmodus-Befehl wurde gesendet.";
-  log("Anzeigeprofil ausgewählt: "+mode+". Keine Bluetooth-Schreiboperation ausgeführt.");
+  log("Anzeigeprofil ausgewählt: "+mode+". Keine Bluetooth-Schreiboperation.");
 }
 
 function enableGPS(){
-  if(!navigator.geolocation){
-    $("gpsStatus").textContent="GPS nicht verfügbar";
-    return;
-  }
-  if(gpsWatch!==null){
-    $("gpsStatus").textContent="GPS bereits aktiv";
-    return;
-  }
-
+  if(!navigator.geolocation){$("gpsStatus").textContent="GPS nicht verfügbar";return;}
+  if(gpsWatch!==null){$("gpsStatus").textContent="GPS bereits aktiv";return;}
   gpsWatch=navigator.geolocation.watchPosition(position=>{
     const c=position.coords;
     const kmh=c.speed==null?0:Math.max(0,c.speed*3.6);
@@ -614,10 +380,9 @@ function enableGPS(){
     $("speedUnit").textContent=" "+units;
     $("speedGauge").style.width=Math.min(100,kmh/50*100)+"%";
     $("gpsStatus").textContent="GPS aktiv · Genauigkeit "+Math.round(c.accuracy)+" m";
-
-    if(rideActive && lastPosition){
+    if(rideActive&&lastPosition){
       const d=haversine(lastPosition.lat,lastPosition.lon,c.latitude,c.longitude);
-      if(d<0.2 && d>0.001){
+      if(d<0.2&&d>0.001){
         distanceKm+=d;
         $("distance").textContent=distanceKm.toFixed(2);
         $("distance2").textContent=distanceKm.toFixed(2);
@@ -627,70 +392,47 @@ function enableGPS(){
   },error=>{
     $("gpsStatus").textContent="GPS-Fehler: "+error.message;
     log("GPS-Fehler: "+error.message);
-  },{
-    enableHighAccuracy:true,maximumAge:1000,timeout:15000
-  });
-
+  },{enableHighAccuracy:true,maximumAge:1000,timeout:15000});
   $("gpsStatus").textContent="GPS wird gestartet …";
   log("GPS-Anfrage gestartet.");
 }
 
 function haversine(lat1,lon1,lat2,lon2){
-  const r=x=>x*Math.PI/180;
-  const dLat=r(lat2-lat1),dLon=r(lon2-lon1);
-  const a=Math.sin(dLat/2)**2+
-    Math.cos(r(lat1))*Math.cos(r(lat2))*Math.sin(dLon/2)**2;
+  const r=x=>x*Math.PI/180,dLat=r(lat2-lat1),dLon=r(lon2-lon1);
+  const a=Math.sin(dLat/2)**2+Math.cos(r(lat1))*Math.cos(r(lat2))*Math.sin(dLon/2)**2;
   return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
 function startRide(){
-  if(rideActive) return;
-  rideActive=true;
-  rideStart=Date.now();
-  lastPosition=null;
+  if(rideActive)return;
+  rideActive=true;rideStart=Date.now();lastPosition=null;
   rideTimer=setInterval(()=>{
     rideSeconds=Math.floor((Date.now()-rideStart)/1000);
     const m=Math.floor(rideSeconds/60),s=rideSeconds%60;
     const t=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
-    $("duration").textContent=t;
-    $("duration2").textContent=t;
+    $("duration").textContent=t;$("duration2").textContent=t;
   },1000);
   log("GPS-Fahrt gestartet.");
 }
 
 function stopRide(){
-  if(!rideActive) return;
-  rideActive=false;
-  lastPosition=null;
-  clearInterval(rideTimer);
-  rideTimer=null;
-  log("Fahrt gestoppt.");
+  if(!rideActive)return;
+  rideActive=false;lastPosition=null;clearInterval(rideTimer);rideTimer=null;log("Fahrt gestoppt.");
 }
 
 function resetRide(){
-  stopRide();
-  distanceKm=0;
-  rideSeconds=0;
-  rideStart=0;
-  $("distance").textContent="0.00";
-  $("distance2").textContent="0.00";
-  $("duration").textContent="00:00";
-  $("duration2").textContent="00:00";
-  $("speed").textContent="0";
-  $("speedGauge").style.width="0%";
+  stopRide();distanceKm=0;rideSeconds=0;rideStart=0;
+  $("distance").textContent="0.00";$("distance2").textContent="0.00";
+  $("duration").textContent="00:00";$("duration2").textContent="00:00";
+  $("speed").textContent="0";$("speedGauge").style.width="0%";
   log("Fahrtwerte zurückgesetzt.");
 }
 
 function exportCSV(){
-  const csv=[
-    "Zeit;Strecke_km;Fahrzeit_s;Anzeigeprofil",
-    new Date().toISOString()+";"+distanceKm.toFixed(3)+";"+rideSeconds+";"+selectedMode
-  ].join("\n");
+  const csv=["Zeit;Strecke_km;Fahrzeit_s;Anzeigeprofil",new Date().toISOString()+";"+distanceKm.toFixed(3)+";"+rideSeconds+";"+selectedMode].join("\n");
   const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download="rs-e-drive-fahrt.csv";a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="rs-e-drive-fahrt.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   log("CSV exportiert.");
 }
 
@@ -704,29 +446,15 @@ function runChecks(){
     "GATT-Dienste: "+services.length,
     "GATT-Merkmale: "+characteristics.length
   ];
-  $("diagSummary").textContent=result.join("\n");
-  result.forEach(log);
+  $("diagSummary").textContent=result.join("\n");result.forEach(log);
 }
 
-function setBrightness(value){
-  document.body.style.filter="brightness("+Number(value)/100+")";
-}
-
-function setUnits(value){
-  units=value;
-  $("speedUnit").textContent=" "+units;
-  log("Geschwindigkeitseinheit: "+units);
-}
-
-function clearLog(){
-  logEntries=[];
-  $("diagnostics").textContent="Protokoll geleert.";
-}
+function clearLog(){logEntries=[];$("diagnostics").textContent="Protokoll geleert.";}
+function setBrightness(value){document.body.style.filter="brightness("+Number(value)/100+")";}
+function setUnits(value){units=value;$("speedUnit").textContent=" "+units;log("Geschwindigkeitseinheit: "+units);}
 
 window.addEventListener("beforeunload",()=>{
-  if(gpsWatch!==null && navigator.geolocation){
-    navigator.geolocation.clearWatch(gpsWatch);
-  }
+  if(gpsWatch!==null&&navigator.geolocation)navigator.geolocation.clearWatch(gpsWatch);
 });
 </script>
 </body>
