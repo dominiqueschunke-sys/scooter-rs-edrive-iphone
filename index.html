@@ -1,4 +1,321 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111113">
+<meta name="description" content="Scooter RS e-Drive Dashboard">
+<title>Scooter RS e-DRIVE</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0b0d;--panel:#17171b;--panel2:#202025;--red:#ff3038;--text:#f5f5f7;--muted:#9b9ba5;--line:#303037}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#241014 0,#0b0b0d 45%);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+header{padding:calc(18px + env(safe-area-inset-top)) 18px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff10;position:sticky;top:0;background:#0b0b0dee;backdrop-filter:blur(14px);z-index:5}
+.brand{font-weight:900;letter-spacing:1.4px;font-size:17px}
+.brand span{color:var(--red)}
+.sub{color:var(--muted);font-size:11px;letter-spacing:2px;margin-top:3px}
+.pill{border:1px solid #573037;color:#ff7c81;border-radius:99px;padding:6px 10px;font-size:11px;font-weight:800}
+main{max-width:620px;margin:auto;padding:18px 15px 105px}
+.page{display:none}
+.page.active{display:block}
+.eyebrow{color:var(--red);font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+.title{font-size:26px;font-weight:900;margin:7px 0 17px;letter-spacing:-.5px}
+.card{background:linear-gradient(145deg,#1d1d22,#131316);border:1px solid var(--line);border-radius:22px;padding:17px;margin-bottom:14px;box-shadow:0 12px 32px #0003}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.red{color:var(--red)}
+.gauge{width:min(76vw,310px);height:min(76vw,310px);margin:12px auto 16px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 220deg,var(--red) 0deg,#ff3038 180deg,#35353b 180deg,#35353b 280deg,transparent 280deg);position:relative}
+.gauge:before{content:"";position:absolute;inset:10px;border-radius:50%;background:radial-gradient(circle at 50% 30%,#29292e,#101012 72%);border:1px solid #ffffff0c}
+.gauge-inner{position:relative;text-align:center}
+.speed{font-size:78px;font-weight:900;line-height:1;letter-spacing:-4px}
+.unit{font-size:13px;letter-spacing:3px;color:var(--muted);margin-top:6px}
+.statusline{display:flex;justify-content:center;gap:8px;align-items:center;color:#a9a9b2;font-size:12px}
+.dot{width:7px;height:7px;background:#f7b731;border-radius:50%;display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#ffffff06;border:1px solid #ffffff0b;border-radius:15px;padding:14px}
+.statlabel{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.statvalue{font-size:24px;font-weight:850;margin-top:7px}
+.statvalue small{font-size:12px;color:var(--muted);font-weight:500}
+.btn{border:0;border-radius:13px;background:var(--red);color:white;font-size:14px;font-weight:850;padding:13px 15px;cursor:pointer}
+.btn.secondary{background:#2a2a31;border:1px solid #414149}
+.btn.ghost{background:transparent;border:1px solid #484850;color:var(--text)}
+.btn.full{width:100%}
+.btn:active{transform:scale(.98)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sectionhead{font-size:14px;font-weight:850;margin:4px 0 12px}
+.nav{position:fixed;z-index:10;bottom:0;left:0;right:0;padding:9px 7px calc(9px + env(safe-area-inset-bottom));background:#101013f2;border-top:1px solid #ffffff12;display:grid;grid-template-columns:repeat(5,1fr);backdrop-filter:blur(18px)}
+.nav button{background:none;border:0;color:#8f8f99;font-size:10px;font-weight:750;padding:7px 1px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.nav button b{font-size:19px;font-weight:500}
+.nav button.active{color:#ff5057}
+label{font-size:12px;color:#bdbdc5;display:block;margin:14px 0 8px}
+input[type=range]{width:100%;accent-color:var(--red)}
+select{width:100%;padding:12px;background:#242429;color:white;border:1px solid #44444b;border-radius:12px}
+.log{padding:13px 0;border-bottom:1px solid var(--line)}
+.log:last-child{border-bottom:0}
+.notice{border:1px solid #5c3838;background:#241517;color:#ffc4c7;border-radius:13px;padding:12px;font-size:12px;line-height:1.5}
+.empty{text-align:center;color:var(--muted);padding:20px 8px;font-size:13px}
+.footer{text-align:center;color:#686872;font-size:10px;margin-top:22px}
+</style>
+</head>
+<body>
+<header>
+<div>
+<div class="brand">SCOOTER <span>RS</span> e-DRIVE</div>
+<div class="sub">PERSONAL MOBILITY SYSTEM</div>
+</div>
+<div class="pill" id="btPill">OFFLINE</div>
+</header>
+
+<main>
+<section class="page active" id="cockpit">
+<div class="eyebrow">Fahrzeugübersicht</div>
+<div class="title">Dein Cockpit.</div>
+<div class="card">
+<div class="row"><span class="small muted">LIVE-GESCHWINDIGKEIT</span><span class="pill">SIMULATION</span></div>
+<div class="gauge"><div class="gauge-inner"><div class="speed" id="speed">0</div><div class="unit">KM/H</div></div></div>
+<div class="statusline"><span class="dot"></span><span id="rideStatus">Bereit zur Demo-Fahrt</span></div>
+<div style="margin-top:17px" class="grid2">
+<button class="btn full" id="demoBtn" onclick="toggleDemo()">▶ Demo starten</button>
+<button class="btn secondary full" onclick="resetDemo()">↺ Zurücksetzen</button>
+</div>
+</div>
+<div class="stats">
+<div class="stat"><div class="statlabel">Batterie</div><div class="statvalue">-- <small>%</small></div><div class="small muted">Keine Roller-Verbindung</div></div>
+<div class="stat"><div class="statlabel">Reichweite</div><div class="statvalue">-- <small>km</small></div><div class="small muted">Keine Daten verfügbar</div></div>
+<div class="stat"><div class="statlabel">Fahrtzeit</div><div class="statvalue" id="time">00:00</div><div class="small muted">Demo-Sitzung</div></div>
+<div class="stat"><div class="statlabel">Distanz</div><div class="statvalue" id="dist">0.00 <small>km</small></div><div class="small muted">Geschätzt in der Demo</div></div>
+</div>
+<div class="notice" style="margin-top:14px">Diese Version ist eine Web-Demo. Sie liest noch keine echten Daten vom Xiaomi Scooter 5 aus und sendet keine Steuerbefehle an den Roller.</div>
+</section>
+
+<section class="page" id="rides">
+<div class="eyebrow">Deine Daten</div>
+<div class="title">Fahrten.</div>
+<div class="card">
+<div class="row"><div><div class="sectionhead">Fahrtaufzeichnung</div><div class="small muted">GPS vom iPhone, nur bei HTTPS und erteilter Freigabe</div></div><span class="pill" id="gpsBadge">BEREIT</span></div>
+<div class="stats" style="margin:14px 0">
+<div class="stat"><div class="statlabel">GPS-Distanz</div><div class="statvalue" id="gpsDist">0.00 <small>km</small></div></div>
+<div class="stat"><div class="statlabel">GPS-Zeit</div><div class="statvalue" id="gpsTime">00:00</div></div>
+</div>
+<div class="grid2"><button class="btn full" onclick="startGps()">● Start</button><button class="btn secondary full" onclick="stopGps()">■ Stopp & speichern</button></div>
+<p class="small muted">Die Aufzeichnung läuft auf deinem iPhone. Standortdaten bleiben in diesem Browser gespeichert, solange du sie nicht löschst.</p>
+</div>
+<div class="card">
+<div class="row"><div class="sectionhead">Gespeicherte Fahrten</div><button class="btn ghost" onclick="exportCsv()">CSV exportieren</button></div>
+<div id="logs"><div class="empty">Noch keine gespeicherten Fahrten.</div></div>
+<button class="btn ghost full" onclick="clearLogs()">Fahrten löschen</button>
+</div>
+</section>
+
+<section class="page" id="diagnose">
+<div class="eyebrow">Systemstatus</div>
+<div class="title">Diagnose.</div>
+<div class="card"><div class="sectionhead">App-Prüfung</div><div id="checks"></div><button class="btn full" style="margin-top:14px" onclick="runChecks()">System erneut prüfen</button></div>
+<div class="card">
+<div class="sectionhead">Bluetooth-Verbindung · Xiaomi Scooter 5</div>
+<div class="row"><span>Verbindungsstatus</span><span class="pill" id="bleStatus">NICHT VERBUNDEN</span></div>
+<div class="row" style="margin-top:12px"><span>Gerät</span><strong id="bleDeviceName" class="small">Kein Gerät</strong></div>
+<div class="row" style="margin-top:12px"><span>GATT-Dienst</span><strong class="small" id="bleServiceState">Noch nicht geprüft</strong></div>
+<div class="grid2" style="margin-top:15px">
+<button class="btn full" onclick="connectScooter()">⌁ Bluetooth verbinden</button>
+<button class="btn secondary full" onclick="readAllSafeCharacteristics()">Rohdaten lesen</button>
+</div>
+<button class="btn ghost full" style="margin-top:10px" onclick="subscribeSafeNotifications()">Benachrichtigungen aktivieren</button>
+<button class="btn secondary full" style="margin-top:10px" onclick="diagnoseLiveData()">Live-Diagnose ausführen</button>
+<p class="small muted" style="margin-top:12px">Nur lesender Diagnosemodus: Es werden keine Steuerbefehle geschrieben. Bluefy muss Web Bluetooth unterstützen. Die bekannten FE95-Merkmale werden roh angezeigt, nicht als Akku-Prozent oder Geschwindigkeit geraten.</p>
+</div>
+<div class="card">
+<div class="sectionhead">BLE-Rohdatenprotokoll</div>
+<div class="row"><span class="small muted">Empfangene Einträge</span><button class="btn ghost" onclick="clearBleLog()">Leeren</button></div>
+<pre id="bleLog" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;background:#09090b;border:1px solid var(--line);border-radius:12px;padding:12px;color:#c7f7d5;font:11px ui-monospace,monospace;margin:12px 0 0">Noch keine Bluetooth-Daten. Verbinde zuerst den Scooter.</pre>
+</div>
+<div class="card">
+<div class="sectionhead">Weitere Statuswerte</div>
+<div class="row"><span>GPS-Berechtigung</span><span class="pill" id="gpsPermission">UNGEPRÜFT</span></div>
+<p class="small muted" style="margin-top:12px">Ein erfolgreicher Bluetooth-Link bestätigt noch nicht, dass das private Scooter-Protokoll dekodiert ist. Unbekannte Bytes bleiben Rohdaten.</p>
+</div>
+</section>
+
+<section class="page" id="tuning">
+<div class="eyebrow">Personalisierung</div><div class="title">Profile.</div>
+<div class="card">
+<div class="sectionhead">Fahrprofil auswählen</div>
+<select id="mode" onchange="saveProfile()">
+<option value="comfort">Comfort · ausgewogen</option>
+<option value="sport">Sport · dynamisch</option>
+<option value="eco">Eco · sparsam</option>
+</select>
+<label for="response">Anzeige-Reaktion <span id="responseVal" class="red">50%</span></label>
+<input id="response" type="range" min="0" max="100" value="50" oninput="responseVal.textContent=this.value+'%';saveProfile()">
+<label for="brightness">Cockpit-Helligkeit <span id="brightnessVal" class="red">80%</span></label>
+<input id="brightness" type="range" min="20" max="100" value="80" oninput="brightnessVal.textContent=this.value+'%';saveProfile()">
+<button class="btn full" style="margin-top:16px" onclick="saveProfile(true)">Profil speichern</button>
+</div>
+<div class="notice">Diese Profile verändern nur die Darstellung in der Web-App. Sie verändern nicht die Leistung, Geschwindigkeit oder Firmware des Rollers.</div>
+</section>
+
+<section class="page" id="setup">
+<div class="eyebrow">Einstellungen</div><div class="title">Setup.</div>
+<div class="card">
+<div class="sectionhead">Fahrzeug</div>
+<div class="row"><span>Modell</span><strong>Xiaomi Scooter 5</strong></div>
+<div class="row" style="margin-top:13px"><span>App-Version</span><strong>0.4.0</strong></div>
+<div class="row" style="margin-top:13px"><span>Speicher</span><strong>Lokaler Browser</strong></div>
+</div>
+<div class="card">
+<div class="sectionhead">Berechtigungen</div>
+<div class="row"><span>Standort für GPS-Fahrten</span><span class="pill">BEI BEDARF</span></div>
+<p class="small muted">Safari benötigt eine sichere HTTPS-Seite und deine Erlaubnis für den Standort.</p>
+<button class="btn secondary full" onclick="checkGps()">GPS-Berechtigung prüfen</button>
+</div>
+<div class="card">
+<div class="sectionhead">Datenverwaltung</div>
+<button class="btn ghost full" onclick="clearProfile()">Profileinstellungen zurücksetzen</button>
+<p class="small muted">Fahrten und Profile werden lokal in diesem Browser gespeichert.</p>
+</div>
+</section>
+<div class="footer">SCOOTER RS e-DRIVE · INOFFIZIELLES COMMUNITY-PROJEKT</div>
+</main>
+
+<nav class="nav">
+<button class="active" data-page="cockpit" onclick="go('cockpit',this)"><b>◉</b>Cockpit</button>
+<button data-page="rides" onclick="go('rides',this)"><b>↗</b>Fahrten</button>
+<button data-page="diagnose" onclick="go('diagnose',this)"><b>⌁</b>Diagnose</button>
+<button data-page="tuning" onclick="go('tuning',this)"><b>⚙</b>Profile</button>
+<button data-page="setup" onclick="go('setup',this)"><b>☷</b>Setup</button>
+</nav>
+
 <script>
+const $=id=>document.getElementById(id);
+let demoOn=false,demoStart=0,demoElapsed=0,demoTimer=null,demoSeconds=0;
+let gpsWatch=null,gpsStart=null,gpsLast=null,gpsMeters=0,gpsSeconds=0,gpsTimer=null;
+const FE95_UUID='0000fe95-0000-1000-8000-00805f9b34fb';
+let bleDevice=null,bleServer=null,bleService=null,bleCharacteristics=[],bleNotifySet=new Set(),bleLogCount=0;
+
+function bleLog(message){
+ const el=$('bleLog');if(!el)return;
+ const stamp=new Date().toLocaleTimeString('de-DE',{hour12:false});
+ const line='['+stamp+'] '+message;
+ el.textContent=(el.textContent==='Noch keine Bluetooth-Daten. Verbinde zuerst den Scooter.'?'':el.textContent+'\n')+line;
+ bleLogCount++;
+ const lines=el.textContent.split('\n');
+ if(lines.length>180)el.textContent=lines.slice(-180).join('\n');
+ el.scrollTop=el.scrollHeight;
+}
+function asBytes(value){return new Uint8Array(value.buffer,value.byteOffset||0,value.byteLength)}
+function bytesToHex(value){return Array.from(asBytes(value)).map(b=>b.toString(16).padStart(2,'0')).join(' ').toUpperCase()||'(leer)'}
+function bytesToAscii(value){return Array.from(asBytes(value)).map(b=>b>=32&&b<=126?String.fromCharCode(b):b===0?'·':'.').join('')||'(leer)'}
+function shortUuid(uuid){const m=String(uuid).match(/([0-9a-f]{4})-0000-1000-8000-00805f9b34fb$/i);return m?m[1].toUpperCase():uuid}
+
+async function connectScooter(){
+ if(!navigator.bluetooth){bleLog('Web Bluetooth ist in diesem Browser nicht verfügbar. Öffne die Seite in Bluefy.');alert('Web Bluetooth ist nicht verfügbar. Bitte in Bluefy öffnen.');return}
+ try{
+  bleLog('Bluetooth-Geräteauswahl geöffnet.');
+  bleDevice=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[FE95_UUID,'battery_service']});
+  $('bleDeviceName').textContent=bleDevice.name||'Unbenanntes Gerät';
+  $('btPill').textContent='VERBINDE…';
+  bleDevice.addEventListener('gattserverdisconnected',()=>{
+   bleServer=null;bleService=null;bleCharacteristics=[];bleNotifySet.clear();
+   $('bleStatus').textContent='GETRENNT';$('btPill').textContent='OFFLINE';
+   $('bleServiceState').textContent='Verbindung getrennt';bleLog('GATT-Verbindung getrennt.');
+  });
+  bleServer=await bleDevice.gatt.connect();
+  $('bleStatus').textContent='VERBUNDEN';$('btPill').textContent='VERBUNDEN';
+  bleLog('Verbunden mit '+(bleDevice.name||'Bluetooth-Gerät'));
+  try{
+   bleService=await bleServer.getPrimaryService(FE95_UUID);
+   bleCharacteristics=await bleService.getCharacteristics();
+   $('bleServiceState').textContent='FE95 · '+bleCharacteristics.length+' Merkmale';
+   bleLog('Dienst FE95 gefunden. Merkmale: '+bleCharacteristics.length);
+   for(const c of bleCharacteristics){
+    const p=c.properties;
+    const flags=['read','write','writeWithoutResponse','notify','indicate'].filter(k=>p[k]).join(', ')||'keine';
+    bleLog('Merkmal '+shortUuid(c.uuid)+' ['+flags+']');
+   }
+  }catch(e){
+   $('bleServiceState').textContent='FE95 nicht verfügbar';
+   bleLog('FE95-Dienst konnte nicht gelesen werden: '+(e.message||e));
+   try{
+    const services=await bleServer.getPrimaryServices();
+    bleLog('Sichtbare Primärdienste: '+services.map(x=>x.uuid).join(', '));
+   }catch(e2){bleLog('Dienstliste nicht verfügbar: '+(e2.message||e2))}
+  }
+  await readAllSafeCharacteristics();
+ }catch(e){
+  bleLog('Bluetooth-Fehler: '+(e.message||e));
+  $('bleStatus').textContent='FEHLER';$('btPill').textContent='FEHLER';
+ }
+}
+
+async function readAllSafeCharacteristics(){
+ if(!bleServer||!bleServer.connected){bleLog('Nicht verbunden. Erst Bluetooth verbinden.');return}
+ let chars=bleCharacteristics;
+ if(!chars.length){
+  try{bleService=await bleServer.getPrimaryService(FE95_UUID);chars=bleCharacteristics=await bleService.getCharacteristics()}
+  catch(e){bleLog('Keine lesbaren FE95-Merkmale gefunden: '+(e.message||e));return}
+ }
+ let count=0;
+ for(const c of chars){
+  if(!c.properties.read)continue;
+  try{
+   const v=await c.readValue();
+   bleLog('READ '+shortUuid(c.uuid)+' · '+v.byteLength+' Byte · HEX: '+bytesToHex(v)+' · ASCII: '+bytesToAscii(v));
+   count++;
+  }catch(e){bleLog('READ '+shortUuid(c.uuid)+' fehlgeschlagen: '+(e.message||e))}
+ }
+ if(!count)bleLog('Keine Merkmale mit Leseberechtigung gefunden.');
+ else bleLog('Lesen abgeschlossen: '+count+' Merkmal(e).');
+}
+
+async function subscribeSafeNotifications(){
+ if(!bleServer||!bleServer.connected){bleLog('Nicht verbunden. Erst Bluetooth verbinden.');return}
+ let chars=bleCharacteristics;
+ if(!chars.length){
+  try{bleService=await bleServer.getPrimaryService(FE95_UUID);chars=bleCharacteristics=await bleService.getCharacteristics()}
+  catch(e){bleLog('FE95-Dienst nicht verfügbar: '+(e.message||e));return}
+ }
+ let count=0;
+ for(const c of chars){
+  if(!c.properties.notify&&!c.properties.indicate)continue;
+  if(bleNotifySet.has(c.uuid)){bleLog('Bereits aktiv: '+shortUuid(c.uuid));continue}
+  try{
+   c.addEventListener('characteristicvaluechanged',function(ev){
+    const target=ev.target;const v=target.value;
+    bleLog('NOTIFY '+shortUuid(target.uuid)+' ['+target.uuid+'] · '+v.byteLength+' Byte · HEX: '+bytesToHex(v)+' · ASCII: '+bytesToAscii(v));
+   });
+   await c.startNotifications();
+   bleNotifySet.add(c.uuid);
+   bleLog('Notify aktiviert: '+shortUuid(c.uuid)+' ['+c.uuid+']');
+   count++;
+  }catch(e){bleLog('Notify '+shortUuid(c.uuid)+' fehlgeschlagen: '+(e.message||e))}
+ }
+ bleLog('Benachrichtigungsaktivierung abgeschlossen: '+count+' neu aktiviert; '+bleNotifySet.size+' insgesamt aktiv.');
+ bleLog('TEST: Jetzt eine physische Scooter-Taste betätigen und 10 Sekunden auf neue NOTIFY-Zeilen achten.');
+}
+
+async function diagnoseLiveData(){
+ if(!bleServer||!bleServer.connected){bleLog('DIAGNOSE: Nicht verbunden. Erst Bluetooth verbinden.');return}
+ bleLog('=== LIVE-DIAGNOSE START ===');
+ let chars=bleCharacteristics;
+ if(!chars.length){
+  try{bleService=await bleServer.getPrimaryService(FE95_UUID);chars=bleCharacteristics=await bleService.getCharacteristics()}
+  catch(e){bleLog('DIAGNOSE FEHLER: FE95 nicht verfügbar: '+(e.message||e));return}
+ }
+ for(const c of chars){
+  const id=shortUuid(c.uuid),p=c.properties;
+  bleLog('PRÜFE '+id+' | read='+!!p.read+' | notify='+!!p.notify+' | indicate='+!!p.indicate);
+  if(p.read){
+   try{
+    const v=await c.readValue();
+    bleLog('MESSUNG '+id+' | Bytes='+v.byteLength+' | HEX='+bytesToHex(v)+' | ASCII='+bytesToAscii(v));
+   }catch(e){bleLog('LESEFEHLER '+id+': '+(e.message||e))}
+  }
+ }
+ bleLog('=== LIVE-DIAGNOSE ENDE ===');
+}
+function clearBleLog(){if($('bleLog'))$('bleLog').textContent='Protokoll geleert.';bleLogCount=0}
+
 function go(id,btn){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
