@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -26,7 +27,7 @@ h2{font-size:19px;margin:0 0 15px}h3{font-size:14px}
 .speed small{color:var(--muted);font-size:15px}
 .ring{width:220px;height:220px;border:7px solid #292929;border-top-color:var(--red);border-radius:50%;margin:18px auto;display:flex;align-items:center;justify-content:center;flex-direction:column}
 .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.metric{background:#101010;border-radius:11px;padding:14px}
+.metric{background:#101010;border-radius:11px;padding:14px;min-width:0}
 .metric span{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}
 .metric strong{font-size:19px;overflow-wrap:anywhere}
 button{border:0;border-radius:9px;background:var(--red);color:white;font-weight:800;padding:13px 15px;cursor:pointer;font-size:13px}
@@ -36,12 +37,14 @@ button:disabled{opacity:.5}
 .actions button{flex:1;min-width:130px}
 label{display:block;color:#aaa;font-size:12px;margin:12px 0 6px}
 input,select{width:100%;padding:12px;background:#0b0b0b;color:#fff;border:1px solid #383838;border-radius:8px}
-.log{background:#090909;border:1px solid #252525;border-radius:8px;padding:11px;font:11px/1.7 monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:280px;overflow:auto;color:#bdbdbd}
+.log{background:#090909;border:1px solid #252525;border-radius:8px;padding:11px;font:11px/1.7 monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow:auto;color:#bdbdbd}
 .muted{color:var(--muted);font-size:12px;line-height:1.5}
-.item{border-bottom:1px solid #292929;padding:12px 0;font-size:13px}
+.item{border-bottom:1px solid #292929;padding:12px 0;font-size:12px;overflow-wrap:anywhere}
 .item:last-child{border:0}
 .badge{display:inline-block;border:1px solid #3b3b3b;border-radius:20px;padding:5px 9px;font-size:11px;color:#bbb}
 footer{text-align:center;color:#666;font-size:10px;padding:20px}
+.small-button{padding:8px 10px;font-size:11px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -62,7 +65,7 @@ footer{text-align:center;color:#666;font-size:10px;padding:20px}
 <section class="page active" id="cockpit">
   <div class="panel speed">
     <div class="eyebrow">RS PERFORMANCE SYSTEM</div>
-    <div class="ring"><strong id="speed">0</strong><small>km/h</small></div>
+    <div class="ring"><strong id="speed">--</strong><small>km/h</small></div>
     <span class="badge" id="rideStatus">FAHRT BEENDET</span>
     <p class="muted">Echte Geschwindigkeit wird erst angezeigt, wenn das Datenformat bestätigt wurde.</p>
   </div>
@@ -74,11 +77,14 @@ footer{text-align:center;color:#666;font-size:10px;padding:20px}
   </div>
   <div class="panel" style="margin-top:13px">
     <h2>Bluetooth Control</h2>
-    <p class="muted">Verbinde deinen Scooter, um die verfügbaren Bluetooth-Dienste zu untersuchen.</p>
+    <p class="muted">Verbindung zum Scooter und sichere Untersuchung der verfügbaren Bluetooth-Merkmale.</p>
     <div class="actions"><button id="connectBtn">Bluetooth verbinden</button><button class="secondary" id="disconnectBtn">Trennen</button></div>
     <p class="muted" id="bleInfo">Noch kein Scooter verbunden.</p>
   </div>
-  <div class="panel"><h3>Fahrtensteuerung</h3><div class="actions"><button id="startRide">Fahrt starten</button><button class="secondary" id="stopRide">Fahrt beenden</button></div></div>
+  <div class="panel">
+    <h3>Fahrtensteuerung</h3>
+    <div class="actions"><button id="startRide">Fahrt starten</button><button class="secondary" id="stopRide">Fahrt beenden</button></div>
+  </div>
 </section>
 
 <section class="page" id="fahrten">
@@ -95,23 +101,41 @@ footer{text-align:center;color:#666;font-size:10px;padding:20px}
 
 <section class="page" id="diagnose">
   <div class="panel">
-    <h2>Live-Diagnose</h2>
+    <h2>Bluetooth Live-Diagnose</h2>
     <div class="metrics">
       <div class="metric"><span>VERBINDUNG</span><strong id="diagConnection">Getrennt</strong></div>
       <div class="metric"><span>FIRMWARE</span><strong id="firmwareStatus">Unbekannt</strong></div>
       <div class="metric"><span>GEFUNDENE MERKMALE</span><strong id="serviceCount">0</strong></div>
-      <div class="metric"><span>NOTIFICATIONS</span><strong id="notificationCount">0</strong></div>
+      <div class="metric"><span>EMPFANGENE DATENPAKETE</span><strong id="notificationCount">0</strong></div>
     </div>
-    <div class="actions" style="margin-top:15px"><button id="safeCheck">Protokoll sicher prüfen</button><button class="secondary" id="readAgain">Lesbare Werte neu lesen</button></div>
+    <p class="muted" id="lastData">Noch keine Benachrichtigungsdaten empfangen.</p>
+    <div class="actions" style="margin-top:15px">
+      <button id="safeCheck">Protokoll sicher prüfen</button>
+      <button class="secondary" id="readAgain">Lesbare Werte neu lesen</button>
+      <button class="secondary" id="stopNotifications">Notifications stoppen</button>
+    </div>
+    <p class="muted">Diese Diagnose liest lesbare Merkmale und aktiviert Benachrichtigungen. Sie sendet keine unbekannten Schreibbefehle.</p>
   </div>
-  <div class="panel"><h3>Bluetooth-Merkmale</h3><div id="serviceList" class="muted">Noch keine Merkmale untersucht.</div></div>
-  <div class="panel"><h3>Diagnoseprotokoll</h3><div class="log" id="log">RS-e-DRIVE bereit.</div><button class="secondary" id="clearLog" style="margin-top:10px">Protokoll leeren</button></div>
+  <div class="panel">
+    <h3>Bluetooth-Merkmale</h3>
+    <p class="muted">Die vollständige UUID, Eigenschaften und Lesestatus werden hier angezeigt.</p>
+    <div id="serviceList" class="muted">Noch keine Merkmale untersucht.</div>
+  </div>
+  <div class="panel">
+    <h3>Diagnoseprotokoll</h3>
+    <div class="actions">
+      <button class="secondary" id="copyLog">Protokoll markieren</button>
+      <button class="secondary" id="downloadLog">Protokoll speichern</button>
+      <button class="secondary" id="clearLog">Protokoll leeren</button>
+    </div>
+    <div class="log" id="log" style="margin-top:10px">RS-e-DRIVE bereit.</div>
+  </div>
 </section>
 
 <section class="page" id="profile">
   <div class="panel">
     <h2>Fahrprofile</h2>
-    <p class="muted">Profile werden lokal gespeichert und verändern nicht die Scooter-Steuerung.</p>
+    <p class="muted">Profile werden lokal gespeichert. Sie verändern nicht die Scooter-Steuerung.</p>
     <label for="profileSelect">Profil auswählen</label>
     <select id="profileSelect"><option>Standard</option><option>Eco</option><option>Sport</option><option>Custom</option></select>
     <label for="profileName">Eigenes Profil benennen</label>
@@ -126,264 +150,552 @@ footer{text-align:center;color:#666;font-size:10px;padding:20px}
     <h2>App-Einstellungen</h2>
     <div class="item">Scooter <strong style="float:right">Xiaomi Scooter 5</strong></div>
     <div class="item">Bluetooth <strong style="float:right">Web Bluetooth</strong></div>
-    <p class="muted">Web Bluetooth wird auf iOS nicht von jedem Browser unterstützt. Öffne die App über HTTPS in einem kompatiblen Browser.</p>
+    <p class="muted">Web Bluetooth wird auf iOS nicht von jedem Browser unterstützt. Die Verbindung funktioniert nur, wenn Browser und Berechtigungen es erlauben.</p>
     <h3>Sicherheitsgrenze</h3>
-    <p class="muted">Die Diagnose liest nur lesbare Merkmale und aktiviert Notifications. Unbekannte Schreibbefehle werden nicht gesendet.</p>
+    <p class="muted">Es werden keine unbekannten Steuerbefehle geschrieben. Geschwindigkeit und Akku bleiben unbekannt, bis das Datenformat verlässlich bestätigt ist.</p>
     <button class="secondary" id="resetApp">Lokale App-Daten löschen</button>
   </div>
 </section>
-<footer>RS-e-DRIVE · Diagnoseoberfläche · Keine unbekannten Steuerbefehle</footer>
+
+<footer>RS-e-DRIVE · Bluetooth-Diagnose · Keine unbekannten Steuerbefehle</footer>
 </main>
 
 <script>
 "use strict";
 
 const SERVICE_UUID="0000fe95-0000-1000-8000-00805f9b34fb";
-let bleDevice=null, bleServer=null, scooterService=null, characteristics=[];
-let rideActive=false, rideStart=0, rideTimer=null, watchId=null;
-let lastPosition=null, rideMeters=0, rideNotifications=0;
 
-const RS_PROTOCOL={firmware:null,lastNotify:{},counts:{}};
+let bleDevice=null;
+let bleServer=null;
+let scooterService=null;
+let characteristics=[];
+let rideActive=false;
+let rideStart=0;
+let rideTimer=null;
+let watchId=null;
+let lastPosition=null;
+let rideMeters=0;
+let rideNotifications=0;
+let notificationsRunning=false;
+
+const RS_PROTOCOL={
+  firmware:null,
+  counts:{},
+  lastNotify:{},
+  lastTimestamp:{},
+  readResults:{},
+  handlers:new Map()
+};
+
 const $=id=>document.getElementById(id);
 
 function log(message){
   const box=$("log");
-  box.textContent+="\n["+new Date().toLocaleTimeString("de-DE")+"] "+message;
+  const line="["+new Date().toLocaleTimeString("de-DE")+"] "+message;
+  box.textContent+=(box.textContent?"\n":"")+line;
   box.scrollTop=box.scrollHeight;
 }
+
 function shortUuid(uuid){
   const m=uuid.toLowerCase().match(/^0000([0-9a-f]{4})-0000-1000-8000-00805f9b34fb$/);
-  return m?m[1]:uuid;
+  return m?m[1].toUpperCase():uuid;
 }
+
 function hex(bytes){
   return Array.from(bytes).map(b=>b.toString(16).padStart(2,"0")).join(" ");
 }
+
 function firmwareFromBytes(bytes){
-  const text=Array.from(bytes).map(b=>String.fromCharCode(b)).join("").replace(/\0/g,"").trim();
+  const text=Array.from(bytes)
+    .map(b=>String.fromCharCode(b))
+    .join("")
+    .replace(/\0/g,"")
+    .trim();
   return /^[\x20-\x7E]{2,40}$/.test(text)?text:null;
 }
+
 function setFirmware(value){
+  if(!value)return;
+  if(RS_PROTOCOL.firmware===value)return;
   RS_PROTOCOL.firmware=value;
   $("firmwareStatus").textContent=value;
   $("firmwareShort").textContent=value;
   log("FIRMWARE ERKANNT: "+value);
 }
+
 function setConnection(connected){
   $("connectionStatus").textContent=connected?"● VERBUNDEN":"● NICHT VERBUNDEN";
   $("connectionStatus").style.color=connected?"#55e58b":"#929292";
   $("diagConnection").textContent=connected?"Verbunden":"Getrennt";
-  $("bleInfo").textContent=connected?"Verbunden mit: "+(bleDevice?.name||"Scooter"):"Noch kein Scooter verbunden.";
+  $("bleInfo").textContent=connected
+    ?"Verbunden mit: "+(bleDevice?.name||"Scooter")
+    :"Noch kein Scooter verbunden.";
 }
+
+function getProperties(ch){
+  const p=ch.properties;
+  const list=[];
+  if(p.read)list.push("read");
+  if(p.notify)list.push("notify");
+  if(p.indicate)list.push("indicate");
+  if(p.write)list.push("write");
+  if(p.writeWithoutResponse)list.push("writeWithoutResponse");
+  if(p.authenticatedSignedWrites)list.push("authenticatedSignedWrites");
+  return list;
+}
+
 function recordCharacteristic(uuid,value){
   const id=shortUuid(uuid);
   const bytes=new Uint8Array(value.buffer,value.byteOffset,value.byteLength);
+  const stamp=new Date().toLocaleTimeString("de-DE");
+
   RS_PROTOCOL.counts[id]=(RS_PROTOCOL.counts[id]||0)+1;
   RS_PROTOCOL.lastNotify[id]=hex(bytes);
+  RS_PROTOCOL.lastTimestamp[id]=stamp;
+
   rideNotifications++;
   $("notificationCount").textContent=rideNotifications;
-  log("Notification "+id+": "+bytes.length+" Byte ["+hex(bytes)+"]");
+  $("lastData").textContent="Letzter Empfang: "+id+" um "+stamp+" · "+bytes.length+" Byte";
+
+  log("NOTIFY "+id+" ("+uuid+"): "+bytes.length+" Byte ["+hex(bytes)+"]");
+  renderCharacteristics();
+}
+
+function renderCharacteristics(){
+  const box=$("serviceList");
+  box.replaceChildren();
+
+  if(!characteristics.length){
+    box.textContent="Keine Merkmale verfügbar.";
+    return;
+  }
+
+  for(const ch of characteristics){
+    const id=shortUuid(ch.uuid);
+    const props=getProperties(ch);
+    const div=document.createElement("div");
+    div.className="item";
+
+    const title=document.createElement("strong");
+    title.textContent=id+" · "+props.join(", ");
+    title.style.display="block";
+
+    const uuid=document.createElement("div");
+    uuid.textContent=ch.uuid;
+    uuid.style.color="#929292";
+    uuid.style.marginTop="5px";
+    uuid.style.fontSize="10px";
+
+    const result=document.createElement("div");
+    result.style.marginTop="5px";
+    result.style.color="#bdbdbd";
+    result.textContent="Lesestatus: "+(RS_PROTOCOL.readResults[id]||"noch nicht gelesen");
+
+    const count=document.createElement("div");
+    count.style.marginTop="4px";
+    count.style.color="#929292";
+    count.textContent="Notifications: "+(RS_PROTOCOL.counts[id]||0);
+
+    const last=document.createElement("div");
+    last.style.marginTop="4px";
+    last.style.overflowWrap="anywhere";
+    last.textContent=RS_PROTOCOL.lastNotify[id]
+      ?"Letzte Daten ("+RS_PROTOCOL.lastTimestamp[id]+"): "+RS_PROTOCOL.lastNotify[id]
+      :"Noch keine Daten empfangen.";
+
+    div.append(title,uuid,result,count,last);
+    box.appendChild(div);
+  }
 }
 
 async function connectBluetooth(){
   if(!navigator.bluetooth){
     log("Web Bluetooth ist in diesem Browser nicht verfügbar.");
-    $("bleInfo").textContent="Web Bluetooth nicht verfügbar. Bitte kompatiblen Browser verwenden.";
+    $("bleInfo").textContent="Web Bluetooth nicht verfügbar. Browser-Unterstützung prüfen.";
     return;
   }
+
   try{
     $("connectBtn").disabled=true;
     log("Bluetooth-Geräteauswahl wird geöffnet.");
+
     bleDevice=await navigator.bluetooth.requestDevice({
       acceptAllDevices:true,
       optionalServices:[SERVICE_UUID]
     });
+
     bleDevice.addEventListener("gattserverdisconnected",onDisconnected);
+
     log("Gerät ausgewählt: "+(bleDevice.name||"Unbekannt"));
+    log("Geräte-ID: "+bleDevice.id);
+
     bleServer=await bleDevice.gatt.connect();
     setConnection(true);
+
     scooterService=await bleServer.getPrimaryService(SERVICE_UUID);
     characteristics=await scooterService.getCharacteristics();
+
     $("serviceCount").textContent=characteristics.length;
     log("FE95-Dienst gefunden. Merkmale: "+characteristics.length);
+
+    for(const ch of characteristics){
+      log("MERKMAL "+shortUuid(ch.uuid)+" · UUID "+ch.uuid+" · "+getProperties(ch).join(", "));
+    }
+
     renderCharacteristics();
     await readAllSafeCharacteristics();
   }catch(error){
-    log("Bluetooth-Fehler: "+error.message);
+    log("Bluetooth-Fehler: "+(error.message||String(error)));
   }finally{
     $("connectBtn").disabled=false;
   }
 }
+
 function onDisconnected(){
+  notificationsRunning=false;
   setConnection(false);
   scooterService=null;
   characteristics=[];
   $("serviceCount").textContent="0";
+  $("serviceList").textContent="Verbindung getrennt. Neu verbinden, um Merkmale erneut zu untersuchen.";
   log("GATT-Verbindung getrennt.");
-  renderCharacteristics();
 }
+
 function disconnectBluetooth(){
-  if(bleDevice?.gatt?.connected)bleDevice.gatt.disconnect();
-  else onDisconnected();
-}
-function renderCharacteristics(){
-  const box=$("serviceList");
-  box.innerHTML="";
-  if(!characteristics.length){box.textContent="Keine Merkmale verfügbar.";return;}
-  for(const ch of characteristics){
-    const props=[];
-    if(ch.properties.read)props.push("read");
-    if(ch.properties.notify)props.push("notify");
-    if(ch.properties.indicate)props.push("indicate");
-    if(ch.properties.write)props.push("write");
-    if(ch.properties.writeWithoutResponse)props.push("write-no-response");
-    const div=document.createElement("div");
-    div.className="item";
-    div.textContent=shortUuid(ch.uuid)+" · "+props.join(", ");
-    box.appendChild(div);
+  if(bleDevice?.gatt?.connected){
+    bleDevice.gatt.disconnect();
+  }else{
+    onDisconnected();
   }
 }
 
-/* Firmware-Fix: Merkmal 0004 wird beim Lesen direkt erkannt und angezeigt. */
 async function readAllSafeCharacteristics(){
-  if(!bleServer?.connected){log("Bitte zuerst Bluetooth verbinden.");return;}
+  if(!bleServer?.connected){
+    log("Bitte zuerst Bluetooth verbinden.");
+    return;
+  }
+
+  log("Starte Leseprüfung.");
+
   for(const ch of characteristics){
-    if(!ch.properties.read)continue;
+    const id=shortUuid(ch.uuid);
+
+    if(!ch.properties.read){
+      RS_PROTOCOL.readResults[id]="nicht lesbar laut Eigenschaft";
+      continue;
+    }
+
     try{
       const value=await ch.readValue();
       const bytes=new Uint8Array(value.buffer,value.byteOffset,value.byteLength);
-      const id=shortUuid(ch.uuid);
-      log("Read "+id+": "+bytes.length+" Byte ["+hex(bytes)+"]");
+      const dataHex=hex(bytes);
+
+      RS_PROTOCOL.readResults[id]="OK · "+bytes.length+" Byte";
+      log("READ "+id+" ("+ch.uuid+"): "+bytes.length+" Byte ["+dataHex+"]");
+
       if(id==="0004"&&bytes.length>0){
         const firmware=firmwareFromBytes(bytes);
         if(firmware)setFirmware(firmware);
         else log("Firmware gelesen, Textformat nicht erkannt.");
       }
     }catch(error){
-      log("Lesefehler "+ch.uuid+": "+error.message);
+      RS_PROTOCOL.readResults[id]="Fehler: "+error.message;
+      log("LESEFEHLER "+id+" ("+ch.uuid+"): "+error.message);
     }
   }
+
+  renderCharacteristics();
+  log("Leseprüfung beendet.");
 }
+
 async function runSafeProtocolCheck(){
-  if(!bleServer?.connected){log("Keine Verbindung. Bitte zuerst Bluetooth verbinden.");return;}
-  log("Starte sichere Protokollprüfung.");
-  await readAllSafeCharacteristics();
+  if(!bleServer?.connected){
+    log("Keine Verbindung. Bitte zuerst Bluetooth verbinden.");
+    return;
+  }
+
+  $("safeCheck").disabled=true;
+
+  try{
+    log("===== DETAILLIERTE PROTOKOLLPRÜFUNG =====");
+    log("Firmware aktuell: "+(RS_PROTOCOL.firmware||"nicht erkannt"));
+    log("Merkmale gefunden: "+characteristics.length);
+
+    await readAllSafeCharacteristics();
+
+    for(const ch of characteristics){
+      if(!ch.properties.notify&&!ch.properties.indicate)continue;
+
+      const id=shortUuid(ch.uuid);
+
+      try{
+        if(!RS_PROTOCOL.handlers.has(ch.uuid)){
+          const handler=event=>{
+            const target=event.target;
+            recordCharacteristic(target.uuid,target.value);
+          };
+          ch.addEventListener("characteristicvaluechanged",handler);
+          RS_PROTOCOL.handlers.set(ch.uuid,handler);
+        }
+
+        await ch.startNotifications();
+        log("NOTIFICATIONS AKTIV: "+id+" · "+ch.uuid);
+      }catch(error){
+        log("NOTIFICATION-FEHLER "+id+": "+error.message);
+      }
+    }
+
+    notificationsRunning=true;
+    log("===== ZUSAMMENFASSUNG =====");
+    log("Firmware: "+(RS_PROTOCOL.firmware||"nicht erkannt"));
+    log("Datenpakete insgesamt: "+rideNotifications);
+
+    const ids=Object.keys(RS_PROTOCOL.counts);
+    if(!ids.length){
+      log("Keine Notification-Daten empfangen.");
+      log("Das bedeutet nicht automatisch, dass keine Live-Daten verfügbar sind.");
+    }else{
+      for(const id of ids){
+        log(id+": "+RS_PROTOCOL.counts[id]+" Pakete; letzter Empfang "+RS_PROTOCOL.lastTimestamp[id]+"; Daten "+RS_PROTOCOL.lastNotify[id]);
+      }
+    }
+
+    log("Keine unbekannten Schreibbefehle gesendet.");
+    renderCharacteristics();
+  }finally{
+    $("safeCheck").disabled=false;
+  }
+}
+
+async function stopAllNotifications(){
   for(const ch of characteristics){
     if(!ch.properties.notify&&!ch.properties.indicate)continue;
     try{
-      await ch.startNotifications();
-      if(!ch._rsHandler){
-        ch._rsHandler=event=>recordCharacteristic(event.target.uuid,event.target.value);
-        ch.addEventListener("characteristicvaluechanged",ch._rsHandler);
-      }
-      log("Notifications aktiviert: "+shortUuid(ch.uuid));
+      await ch.stopNotifications();
+      log("Notifications gestoppt: "+shortUuid(ch.uuid));
     }catch(error){
-      log("Notification nicht verfügbar "+ch.uuid+": "+error.message);
+      log("Stoppen fehlgeschlagen "+shortUuid(ch.uuid)+": "+error.message);
     }
   }
-  $("notificationCount").textContent=rideNotifications;
-  log("Prüfung beendet. Keine unbekannten Schreibbefehle gesendet.");
-  log("----- PROTOKOLLÜBERSICHT -----");
-  log("Firmware: "+(RS_PROTOCOL.firmware||"nicht erkannt"));
-  const keys=Object.keys(RS_PROTOCOL.counts);
-  if(!keys.length)log("Bisher keine Notification-Daten empfangen.");
-  keys.forEach(k=>log(k+" · Notifications: "+RS_PROTOCOL.counts[k]+" · Letzte Daten: "+RS_PROTOCOL.lastNotify[k]));
+  notificationsRunning=false;
+  log("Notification-Prüfung gestoppt.");
 }
 
 function updateRideDisplay(){
   $("distance").textContent=(rideMeters/1000).toFixed(2)+" km";
+
   if(rideActive){
     const s=Math.floor((Date.now()-rideStart)/1000);
-    $("duration").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+    $("duration").textContent=
+      String(Math.floor(s/60)).padStart(2,"0")+":"+
+      String(s%60).padStart(2,"0");
   }
 }
+
 function startRide(){
   if(rideActive)return;
-  rideActive=true;rideStart=Date.now();rideMeters=0;lastPosition=null;
-  $("rideStatus").textContent="FAHRT AKTIV";$("rideStatus").style.color="#55e58b";
+
+  rideActive=true;
+  rideStart=Date.now();
+  rideMeters=0;
+  lastPosition=null;
+
+  $("rideStatus").textContent="FAHRT AKTIV";
+  $("rideStatus").style.color="#55e58b";
   log("Fahrt gestartet.");
+
   if(navigator.geolocation){
     watchId=navigator.geolocation.watchPosition(pos=>{
       const p=pos.coords;
+
       if(lastPosition){
-        const R=6371000,rad=n=>n*Math.PI/180;
-        const dLat=rad(p.latitude-lastPosition.latitude),dLon=rad(p.longitude-lastPosition.longitude);
-        const a=Math.sin(dLat/2)**2+Math.cos(rad(lastPosition.latitude))*Math.cos(rad(p.latitude))*Math.sin(dLon/2)**2;
+        const R=6371000;
+        const rad=n=>n*Math.PI/180;
+        const dLat=rad(p.latitude-lastPosition.latitude);
+        const dLon=rad(p.longitude-lastPosition.longitude);
+        const a=Math.sin(dLat/2)**2+
+          Math.cos(rad(lastPosition.latitude))*
+          Math.cos(rad(p.latitude))*Math.sin(dLon/2)**2;
         const d=2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+
         if(d<150)rideMeters+=d;
       }
+
       lastPosition={latitude:p.latitude,longitude:p.longitude};
       updateRideDisplay();
-    },e=>log("GPS: "+e.message),{enableHighAccuracy:true,maximumAge:1000});
+    },e=>log("GPS-Fehler: "+e.message),{
+      enableHighAccuracy:true,
+      maximumAge:1000
+    });
   }
+
   rideTimer=setInterval(updateRideDisplay,1000);
 }
+
 function stopRide(){
   if(!rideActive)return;
-  rideActive=false;clearInterval(rideTimer);
-  if(watchId!==null)navigator.geolocation.clearWatch(watchId);
+
+  rideActive=false;
+  clearInterval(rideTimer);
+
+  if(watchId!==null&&navigator.geolocation){
+    navigator.geolocation.clearWatch(watchId);
+  }
   watchId=null;
-  const ride={date:new Date().toLocaleString("de-DE"),distance:Number((rideMeters/1000).toFixed(3)),durationSeconds:Math.floor((Date.now()-rideStart)/1000)};
+
+  const ride={
+    date:new Date().toLocaleString("de-DE"),
+    distance:Number((rideMeters/1000).toFixed(3)),
+    durationSeconds:Math.floor((Date.now()-rideStart)/1000)
+  };
+
   const rides=JSON.parse(localStorage.getItem("rsRides")||"[]");
-  rides.unshift(ride);localStorage.setItem("rsRides",JSON.stringify(rides));
-  $("rideStatus").textContent="FAHRT BEENDET";$("rideStatus").style.color="";
-  renderRides();updateRideDisplay();log("Fahrt gespeichert: "+ride.distance+" km.");
+  rides.unshift(ride);
+  localStorage.setItem("rsRides",JSON.stringify(rides));
+
+  $("rideStatus").textContent="FAHRT BEENDET";
+  $("rideStatus").style.color="";
+  renderRides();
+  updateRideDisplay();
+  log("Fahrt gespeichert: "+ride.distance+" km.");
 }
+
 function renderRides(){
   const rides=JSON.parse(localStorage.getItem("rsRides")||"[]");
   $("rideCount").textContent=rides.length;
   $("totalDistance").textContent=rides.reduce((s,r)=>s+r.distance,0).toFixed(2)+" km";
-  const box=$("rideList");box.innerHTML="";
-  if(!rides.length){box.textContent="Noch keine gespeicherten Fahrten.";box.className="muted";return;}
+
+  const box=$("rideList");
+  box.replaceChildren();
+
+  if(!rides.length){
+    box.textContent="Noch keine gespeicherten Fahrten.";
+    box.className="muted";
+    return;
+  }
+
   box.className="";
   rides.forEach(r=>{
-    const d=document.createElement("div");d.className="item";
+    const d=document.createElement("div");
+    d.className="item";
     d.textContent=r.date+" · "+r.distance+" km · "+Math.floor(r.durationSeconds/60)+" min";
     box.appendChild(d);
   });
 }
+
 function exportRides(){
   const rides=JSON.parse(localStorage.getItem("rsRides")||"[]");
-  const csv=["Datum,Strecke_km,Dauer_Sekunden",...rides.map(r=>`"${r.date}",${r.distance},${r.durationSeconds}`)].join("\n");
-  const url=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}));
-  const a=document.createElement("a");a.href=url;a.download="rs-edrive-fahrten.csv";a.click();URL.revokeObjectURL(url);
+  const csv=[
+    "Datum,Strecke_km,Dauer_Sekunden",
+    ...rides.map(r=>`"${String(r.date).replace(/"/g,'""')}",${r.distance},${r.durationSeconds}`)
+  ].join("\n");
+
+  const url=URL.createObjectURL(new Blob(["\uFEFF"+csv],{
+    type:"text/csv;charset=utf-8"
+  }));
+
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="rs-edrive-fahrten.csv";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
+
 function saveProfile(){
   const name=$("profileName").value.trim()||$("profileSelect").value;
   const profiles=JSON.parse(localStorage.getItem("rsProfiles")||"[]");
-  profiles.unshift({name,mode:$("profileSelect").value,saved:new Date().toLocaleString("de-DE")});
-  localStorage.setItem("rsProfiles",JSON.stringify(profiles));renderProfiles();log("Profil lokal gespeichert: "+name);
-}
-function renderProfiles(){
-  const profiles=JSON.parse(localStorage.getItem("rsProfiles")||"[]");
-  const box=$("profileList");box.innerHTML="";
-  profiles.forEach(p=>{const d=document.createElement("div");d.className="item";d.textContent=p.name+" · "+p.mode+" · "+p.saved;box.appendChild(d);});
+
+  profiles.unshift({
+    name,
+    mode:$("profileSelect").value,
+    saved:new Date().toLocaleString("de-DE")
+  });
+
+  localStorage.setItem("rsProfiles",JSON.stringify(profiles));
+  renderProfiles();
+  log("Profil lokal gespeichert: "+name);
 }
 
-document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");$(b.dataset.page).classList.add("active");
-}));
+function renderProfiles(){
+  const profiles=JSON.parse(localStorage.getItem("rsProfiles")||"[]");
+  const box=$("profileList");
+  box.replaceChildren();
+
+  profiles.forEach(p=>{
+    const d=document.createElement("div");
+    d.className="item";
+    d.textContent=p.name+" · "+p.mode+" · "+p.saved;
+    box.appendChild(d);
+  });
+}
+
+function downloadLog(){
+  const blob=new Blob([$("log").textContent],{type:"text/plain;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="rs-edrive-bluetooth-diagnose.txt";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+async function copyLog(){
+  const text=$("log").textContent;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+      log("Protokoll in die Zwischenablage kopiert.");
+    }else{
+      log("Zwischenablage nicht verfügbar. Bitte Protokolltext manuell auswählen und kopieren.");
+    }
+  }catch(error){
+    log("Kopieren nicht möglich: "+error.message);
+  }
+}
+
+document.querySelectorAll(".tabs button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    $(b.dataset.page).classList.add("active");
+  });
+});
+
 $("connectBtn").addEventListener("click",connectBluetooth);
 $("disconnectBtn").addEventListener("click",disconnectBluetooth);
 $("safeCheck").addEventListener("click",runSafeProtocolCheck);
 $("readAgain").addEventListener("click",readAllSafeCharacteristics);
+$("stopNotifications").addEventListener("click",stopAllNotifications);
 $("startRide").addEventListener("click",startRide);
 $("stopRide").addEventListener("click",stopRide);
 $("exportRides").addEventListener("click",exportRides);
 $("clearRides").addEventListener("click",()=>{
-  if(confirm("Alle gespeicherten Fahrten löschen?")){localStorage.removeItem("rsRides");renderRides();}
-});
-$("saveProfile").addEventListener("click",saveProfile);
-$("clearLog").addEventListener("click",()=>$("log").textContent="Protokoll geleert.");
-$("resetApp").addEventListener("click",()=>{
-  if(confirm("Alle lokalen Fahrten und Profile löschen?")){
-    localStorage.removeItem("rsRides");localStorage.removeItem("rsProfiles");renderRides();renderProfiles();log("Lokale Fahrten und Profile gelöscht.");
+  if(confirm("Alle gespeicherten Fahrten löschen?")){
+    localStorage.removeItem("rsRides");
+    renderRides();
   }
 });
-renderRides();renderProfiles();setConnection(false);
+$("saveProfile").addEventListener("click",saveProfile);
+$("downloadLog").addEventListener("click",downloadLog);
+$("copyLog").addEventListener("click",copyLog);
+$("clearLog").addEventListener("click",()=>{
+  $("log").textContent="Protokoll geleert.";
+});
+$("resetApp").addEventListener("click",()=>{
+  if(confirm("Alle lokalen Fahrten und Profile löschen?")){
+    localStorage.removeItem("rsRides");
+    localStorage.removeItem("rsProfiles");
+    renderRides();
+    renderProfiles();
+    log("Lokale Fahrten und Profile gelöscht.");
+  }
+});
+
+renderRides();
+renderProfiles();
+setConnection(false);
 log("RS-e-DRIVE gestartet. Bereit für Bluetooth-Diagnose.");
 </script>
 </body>
 </html>
-
